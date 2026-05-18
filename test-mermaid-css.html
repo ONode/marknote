@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Mermaid CSS Paths</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .mermaid {
+            margin: 20px 0;
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Test CSS Paths - These should override Mermaid's default colors */
+        
+        /* CSS Variables */
+        :root {
+            --mermaid-primary-stroke: #667eea;
+            --mermaid-secondary-stroke: #5a6fd8;
+            --mermaid-arrow-stroke: #4c63d2;
+            --mermaid-text-color: #374151;
+            --mermaid-background-color: #ffffff;
+            --mermaid-node-fill: #ffffff;
+        }
+        
+        /* Node Styling */
+        .mermaid svg .node rect,
+        .mermaid svg .node circle,
+        .mermaid svg .node polygon,
+        .mermaid svg .node ellipse {
+            stroke: var(--mermaid-primary-stroke) !important;
+            stroke-width: 2px !important;
+            fill: var(--mermaid-node-fill) !important;
+        }
+        
+        /* Edge Styling */
+        .mermaid svg .edge path,
+        .mermaid svg .edge line {
+            stroke: var(--mermaid-arrow-stroke) !important;
+            stroke-width: 2px !important;
+        }
+        
+        /* Arrow Markers */
+        .mermaid svg marker path {
+            fill: var(--mermaid-arrow-stroke) !important;
+            stroke: var(--mermaid-arrow-stroke) !important;
+        }
+        
+        /* Text Styling */
+        .mermaid svg .node text,
+        .mermaid svg .edgeLabel text,
+        .mermaid svg text {
+            fill: var(--mermaid-text-color) !important;
+        }
+        
+        /* Dark theme test */
+        .dark-theme {
+            --mermaid-primary-stroke: #a78bfa;
+            --mermaid-arrow-stroke: #7c3aed;
+            --mermaid-text-color: #f3f4f6;
+            --mermaid-background-color: #1f2937;
+            --mermaid-node-fill: #1f2937;
+        }
+        
+        .dark-theme .mermaid {
+            background: var(--mermaid-background-color);
+        }
+        
+        .controls {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 8px;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #5a6fd8;
+        }
+        
+        .info {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Mermaid CSS Path Test</h1>
+        
+        <div class="info">
+            <h3>✅ CSS Paths Test</h3>
+            <p>This page tests the CSS selectors for customizing Mermaid stroke and arrow colors. 
+            The diagrams below should show custom colors (blue theme) instead of Mermaid's default colors.</p>
+        </div>
+        
+        <div class="controls">
+            <button onclick="toggleTheme()">🌙 Toggle Dark Theme</button>
+            <button onclick="inspectElements()">🔍 Inspect Elements</button>
+            <button onclick="testSelectors()">🧪 Test Selectors</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>Flowchart Test</h3>
+            <div class="mermaid">
+                graph TD
+                    A[Start] --> B{Decision}
+                    B -->|Yes| C[Success]
+                    B -->|No| D[Error]
+                    C --> E[End]
+                    D --> F[Retry]
+                    F --> B
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Sequence Diagram Test</h3>
+            <div class="mermaid">
+                sequenceDiagram
+                    participant A as Alice
+                    participant B as Bob
+                    A->>B: Message 1
+                    B-->>A: Response 1
+                    A-)B: Message 2
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Class Diagram Test</h3>
+            <div class="mermaid">
+                classDiagram
+                    class Animal {
+                        +String name
+                        +int age
+                        +makeSound()
+                    }
+                    class Dog {
+                        +String breed
+                        +bark()
+                    }
+                    Animal <|-- Dog
+            </div>
+        </div>
+        
+        <div id="inspection-results" class="info" style="display: none;">
+            <h3>🔍 Element Inspection Results</h3>
+            <div id="inspection-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: "default",
+            securityLevel: "loose"
+        });
+        
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+        }
+        
+        function inspectElements() {
+            const resultsDiv = document.getElementById('inspection-results');
+            const contentDiv = document.getElementById('inspection-content');
+            
+            resultsDiv.style.display = 'block';
+            contentDiv.innerHTML = '<p>Inspecting elements...</p>';
+            
+            setTimeout(() => {
+                const svgs = document.querySelectorAll('.mermaid svg');
+                let html = `<p>Found ${svgs.length} SVG elements:</p>`;
+                
+                svgs.forEach((svg, index) => {
+                    html += `<h4>SVG ${index + 1}:</h4>`;
+                    
+                    // Check stroke elements
+                    const strokeElements = svg.querySelectorAll('[stroke]');
+                    html += `<p><strong>Stroke elements:</strong> ${strokeElements.length}</p>`;
+                    
+                    strokeElements.forEach((el, i) => {
+                        const stroke = el.getAttribute('stroke');
+                        const tag = el.tagName;
+                        const className = el.getAttribute('class') || 'no-class';
+                        html += `<div style="margin-left: 20px; font-family: monospace; font-size: 12px;">
+                            ${i + 1}. ${tag} (${className}) - stroke: ${stroke}
+                        </div>`;
+                    });
+                    
+                    // Check fill elements
+                    const fillElements = svg.querySelectorAll('[fill]');
+                    html += `<p><strong>Fill elements:</strong> ${fillElements.length}</p>`;
+                    
+                    fillElements.forEach((el, i) => {
+                        const fill = el.getAttribute('fill');
+                        const tag = el.tagName;
+                        const className = el.getAttribute('class') || 'no-class';
+                        html += `<div style="margin-left: 20px; font-family: monospace; font-size: 12px;">
+                            ${i + 1}. ${tag} (${className}) - fill: ${fill}
+                        </div>`;
+                    });
+                });
+                
+                contentDiv.innerHTML = html;
+            }, 1000);
+        }
+        
+        function testSelectors() {
+            const resultsDiv = document.getElementById('inspection-results');
+            const contentDiv = document.getElementById('inspection-content');
+            
+            resultsDiv.style.display = 'block';
+            contentDiv.innerHTML = '<p>Testing CSS selectors...</p>';
+            
+            setTimeout(() => {
+                const selectors = [
+                    '.mermaid svg .node rect',
+                    '.mermaid svg .node circle',
+                    '.mermaid svg .node polygon',
+                    '.mermaid svg .edge path',
+                    '.mermaid svg .edge line',
+                    '.mermaid svg marker path'
+                ];
+                
+                let html = '<h4>CSS Selector Test Results:</h4>';
+                
+                selectors.forEach(selector => {
+                    const elements = document.querySelectorAll(selector);
+                    html += `<div style="margin: 10px 0; padding: 10px; background: #f0f0f0; border-radius: 4px;">
+                        <strong>${selector}</strong><br>
+                        Found: ${elements.length} elements
+                    </div>`;
+                });
+                
+                contentDiv.innerHTML = html;
+            }, 500);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1621 @@
+// =============================================================================
+// Complete Theme System for UI Components
+// =============================================================================
+
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// =============================================================================
+// CSS Custom Properties for Theme Switching
+// =============================================================================
+
+:root {
+  // Base colors (HSL components for hsl(var(--*)) / Tailwind)
+  --background: 38 21% 93%;
+  --foreground: 222.2 84% 4.9%;
+
+  // Card colors
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+
+  // Popover colors
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+
+  // Primary colors
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+
+  // Secondary colors
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222.2 84% 4.9%;
+
+  // Muted colors
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+
+  // Accent colors
+  --accent: 210 40% 96%;
+  --accent-foreground: 222.2 84% 4.9%;
+
+  // Destructive colors
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+
+  // Success colors
+  --success: 142 76% 36%;
+  --success-foreground: 210 40% 98%;
+  --success-bg: 142 76% 36%;
+
+  // Border and input colors
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+
+  // Chart colors
+  --chart-1: 222.2 47.4% 11.2%;
+  --chart-2: 210 40% 96%;
+  --chart-3: 215.4 16.3% 46.9%;
+  --chart-4: 210 40% 98%;
+  --chart-5: 214.3 31.8% 91.4%;
+
+  // Sidebar colors
+  --sidebar: 210 40% 98%;
+  --sidebar-foreground: 222.2 84% 4.9%;
+  --sidebar-primary: 222.2 47.4% 11.2%;
+  --sidebar-primary-foreground: 210 40% 98%;
+  --sidebar-accent: 210 40% 96%;
+  --sidebar-accent-foreground: 222.2 84% 4.9%;
+  --sidebar-border: 214.3 31.8% 91.4%;
+  --sidebar-ring: 222.2 84% 4.9%;
+
+  // Radius
+  --radius: 0.5rem;
+
+  // Spacing
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 3rem;
+
+  // Border radius
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  // Font families
+  --font-sans: "universalSans", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-mono: "IBM Plex Mono", "IBM Plex Mono Fallback", ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", monospace;
+  --font-math: "Computer Modern", "Times New Roman", serif;
+
+  // Font sizes
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+
+  // Line heights
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  --table-th: #9ddc7b;
+  --table-row: #d4f5d4;
+}
+
+// Dark theme
+.dark {
+  --table-th: #499322;
+  --table-row: #4c5b4c;
+  --background: 60 1% 26%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 210 40% 98%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+
+  // Success colors
+  --success: 142 76% 36%;
+  --success-foreground: 210 40% 98%;
+  --success-bg: 142 76% 36%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 212.7 26.8% 83.9%;
+  --chart-1: 210 40% 98%;
+  --chart-2: 217.2 32.6% 17.5%;
+  --chart-3: 215 20.2% 65.1%;
+  --chart-4: 222.2 84% 4.9%;
+  --chart-5: 210 40% 96%;
+  --sidebar: 222.2 47.4% 11.2%;
+  --sidebar-foreground: 210 40% 98%;
+  --sidebar-primary: 210 40% 98%;
+  --sidebar-primary-foreground: 222.2 47.4% 11.2%;
+  --sidebar-accent: 217.2 32.6% 17.5%;
+  --sidebar-accent-foreground: 210 40% 98%;
+  --sidebar-border: 217.2 32.6% 17.5%;
+  --sidebar-ring: 212.7 26.8% 83.9%;
+
+  // Radius
+  --radius: 0.5rem;
+
+  // Spacing
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 3rem;
+
+  // Border radius
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  // Font families
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  --font-math: "Computer Modern", "Times New Roman", serif;
+
+  // Font sizes
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+
+  // Line heights
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+}
+
+// =============================================================================
+// Base Element Styles
+// =============================================================================
+
+* {
+  border-color: var(--border);
+  outline-color: var(--ring);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  font-family: var(--font-sans);
+  tab-size: 4;
+}
+
+body {
+  margin: 0;
+  line-height: inherit;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+}
+
+// =============================================================================
+// Typography
+// =============================================================================
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: 600;
+  line-height: var(--line-height-tight);
+  color: var(--foreground);
+}
+
+h1 {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--spacing-lg);
+}
+
+h2 {
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--spacing-md);
+}
+
+h3 {
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--spacing-sm);
+}
+
+h4 {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-sm);
+}
+
+h5 {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-sm);
+}
+
+h6 {
+  font-size: var(--font-size-base);
+  margin-bottom: var(--spacing-sm);
+}
+
+p {
+  margin: 0 0 var(--spacing-md) 0;
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  @include transition(border-bottom-color);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+strong {
+  font-weight: 600;
+}
+
+em {
+  font-style: italic;
+}
+
+blockquote {
+  margin: var(--spacing-lg) 0;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-left: 4px solid var(--primary);
+  background-color: var(--muted);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-style: italic;
+}
+
+ul,
+ol {
+  margin: var(--spacing-md) 0;
+  padding-left: var(--spacing-xl);
+
+  li {
+    margin: var(--spacing-sm) 0;
+  }
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background-color: var(--border);
+  margin: var(--spacing-xl) 0;
+}
+
+// =============================================================================
+// Form Elements
+// =============================================================================
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+// =============================================================================
+// Focus States
+// =============================================================================
+
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #ff6b6b, 0 4px 12px rgba(255, 107, 107, 0.4), 0 8px 24px rgba(255, 107, 107, 0.2);
+}
+.outline-none{
+  outline: none;
+}
+// =============================================================================
+// Selection
+// =============================================================================
+
+::selection {
+  background-color: #ff6b6b;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #ff6b6b;
+  color: #ffffff;
+}
+
+// Additional highlight colors for better visibility
+.highlight-visible {
+  background-color: #ff6b6b !important;
+  color: #ffffff !important;
+}
+
+// Textarea specific selection styling
+textarea::selection {
+  background-color: #ff6b6b;
+  color: #ffffff;
+}
+
+textarea::-moz-selection {
+  background-color: #ff6b6b;
+  color: #ffffff;
+}
+
+// Focus highlight for better visibility
+textarea:focus {
+  outline: none !important;
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 2px #ff6b6b, 0 4px 12px rgba(255, 107, 107, 0.4), 0 8px 24px rgba(255, 107, 107, 0.2);
+}
+
+// =============================================================================
+// Scrollbar Styling
+// =============================================================================
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: var(--radius-sm);
+
+  &:hover {
+    background: var(--muted-foreground);
+  }
+}
+
+// =============================================================================
+// Utility Classes
+// =============================================================================
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+// =============================================================================
+// Animation Classes
+// =============================================================================
+
+.animate-in {
+  animation: animate-in 0.5s ease-out;
+}
+
+.animate-out {
+  animation: animate-out 0.5s ease-in;
+}
+
+@keyframes animate-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes animate-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+
+
+// =============================================================================
+// State Classes
+// =============================================================================
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.loading {
+  position: relative;
+  pointer-events: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1rem;
+    height: 1rem;
+    margin: -0.5rem 0 0 -0.5rem;
+    border: 2px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// =============================================================================
+// Sonner Toast Custom Styling
+// =============================================================================
+[data-sonner-toast][data-type="success"] {
+  background: var(--success-bg);
+  color: var(--success-foreground);
+  border-color: var(--success);
+}
+
+[data-sonner-toast][data-type="success"] [data-description] {
+  color: var(--success-foreground);
+}
+
+// =============================================================================
+// Markdown Body Styling (Local Implementation)
+// =============================================================================
+// 
+// PURPOSE: This section replaces the external github-markdown-css import
+// to avoid conflicts with our global theme system and ensure consistent
+// styling that uses our CSS custom properties instead of hardcoded colors.
+//
+// REPLACEMENT FOR: import "github-markdown-css/github-markdown.css"
+// 
+// BENEFITS:
+// - Uses global theme variables (--foreground, --background, --primary, etc.)
+// - Automatic dark/light mode support
+// - Consistent success colors with toast system
+// - No external dependency conflicts
+// - Full control over markdown styling
+//
+// =============================================================================
+// Local markdown styling - replaces github-markdown-css external import
+.markdown-body {
+  // Use global theme variables instead of hardcoded colors from external CSS
+  color: var(--foreground);
+  //background-color: var(--background);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  word-wrap: break-word;
+  margin: 0;
+  font-weight: 400;
+  font-size: 16px;
+
+  // Typography
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    font-weight: 600;
+    line-height: var(--line-height-tight);
+    color: var(--foreground);
+  }
+
+  h1 {
+    font-size: var(--font-size-4xl);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+  }
+
+  h2 {
+    font-size: var(--font-size-3xl);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3em;
+  }
+
+  h3 {
+    font-size: var(--font-size-2xl);
+  }
+
+  h4 {
+    font-size: var(--font-size-xl);
+  }
+
+  h5 {
+    font-size: var(--font-size-lg);
+  }
+
+  h6 {
+    font-size: var(--font-size-base);
+    color: var(--muted-foreground);
+  }
+
+  // Paragraphs and text
+  p {
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    line-height: var(--line-height-normal);
+  }
+
+  // Links
+  a {
+    color: var(--primary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  // Code
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    padding: 0.125rem 0.25rem;
+    color: var(--foreground);
+  }
+
+  pre {
+    font-family: var(--font-mono);
+    padding: var(--spacing-lg);
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    background-color: #f9f3f3;
+
+    code {
+      padding: 0;
+      border-radius: 0;
+    }
+  }
+
+  // Blockquotes
+  blockquote {
+    margin: var(--spacing-lg) 0;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-left: 4px solid var(--primary);
+    background-color: var(--muted);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+    color: var(--muted-foreground);
+  }
+
+  // Lists
+  ul,
+  ol {
+    margin: var(--spacing-md) 0;
+    padding-left: var(--spacing-xl);
+
+    li {
+      margin: var(--spacing-sm) 0;
+    }
+  }
+
+  // Custom list item decorations with book emoji
+  ul li,
+  ol li {
+    position: relative;
+    list-style: none;
+    padding-left: 1.5em;
+
+    &::before {
+      content: "📖";
+      position: absolute;
+      left: -.195em;
+      top: 0;
+      font-size: 0.9em;
+      line-height: 1.5;
+      color: var(--primary);
+    }
+  }
+
+  // Override default list styles for markdown body
+  ul {
+    list-style: none;
+  }
+
+  ol {
+    list-style: none;
+    counter-reset: item;
+
+    li {
+      counter-increment: item;
+
+      &::before {
+        content: counter(item) ".";
+        position: absolute;
+        left: -.25em;
+        top: 0;
+        font-size: 0.9em;
+        line-height: 1.5;
+        font-weight: 600;
+        color: var(--primary);
+      }
+    }
+
+    li>code {
+      font-weight: 600;
+      background-color: rgb(178, 178, 178);
+      color: rgb(239, 239, 239);
+      border-radius: 0;
+    }
+  }
+
+  // Tables
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: var(--spacing-md) 0;
+
+    th,
+    td {
+      border: 1px solid var(--border);
+      padding: var(--spacing-sm) var(--spacing-md);
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--table-th);
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background-color: var(--table-row);
+    }
+
+  }
+
+  // Horizontal rule
+  hr {
+    border: none;
+    height: 1px;
+    background-color: var(--border);
+    margin: var(--spacing-xl) 0;
+  }
+
+  // Images
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-sm);
+  }
+
+  // Strong and emphasis
+  strong,
+  b {
+    font-weight: 600;
+  }
+
+  // Enhanced filename-description format styling
+  strong.filename-description {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 600;
+    background: var(--muted);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+
+    .filename {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .description {
+      color: var(--muted-foreground);
+      font-weight: 500;
+      font-style: italic;
+    }
+
+    // Add a subtle icon or indicator
+    &::before {
+      content: "📄";
+      font-size: 0.75rem;
+      margin-right: 0.25rem;
+    }
+  }
+
+  // Underscore content format styling (MY_CONTENT1, MY_CONTENT2, etc.)
+  strong.underscore-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--chart-1));
+
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--primary);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .content {
+      color: var(--foreground);
+      font-weight: 700;
+    }
+
+    // Add a subtle icon or indicator
+    &::before {
+      content: "🏷️";
+      font-size: 0.75rem;
+      margin-right: 0.25rem;
+    }
+
+    // Hover effect
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.2s ease;
+    }
+  }
+
+  // Numbered section format styling (02.1 (Reshard), 04 (Aggregation), etc.)
+  strong.numbered-section {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 600;
+    background: #74816c;
+
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--chart-2);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    margin: 1px;
+
+    .number {
+      color: var(--foreground);
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.125rem 0.25rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .description {
+      color: var(--foreground);
+      font-weight: 500;
+      font-style: italic;
+    }
+
+    // Add a subtle icon or indicator
+    &::before {
+      content: "📋";
+      font-size: 0.75rem;
+      margin-right: 0.25rem;
+    }
+
+    // Hover effect
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: all 0.2s ease;
+    }
+  }
+
+  // Space-separated content format styling (Justification for Multi-Points, etc.)
+  strong.space-separated {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--chart-3), var(--chart-4));
+
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--chart-3);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    text-transform: capitalize;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .content {
+      color: var(--foreground);
+      font-weight: 600;
+    }
+
+    // Add a subtle icon or indicator
+    &::before {
+      content: "📝";
+      font-size: 0.75rem;
+      margin-right: 0.25rem;
+    }
+
+    // Hover effect
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.2s ease;
+    }
+  }
+
+  // Additional pattern styling
+  strong.version-number {
+    background: var(--chart-2);
+
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  strong.issue-reference {
+    background: var(--chart-3);
+    color: var(--foreground);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  strong.status-indicator {
+    background: var(--chart-4);
+    color: var(--foreground);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  strong.code-reference {
+    background: var(--muted);
+    color: var(--foreground);
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid var(--border);
+  }
+
+  em,
+  i {
+    font-style: italic;
+  }
+
+  // Success elements - uses our global success colors instead of external CSS hardcoded values
+  // This resolves conflicts between markdown success styling and our toast success colors
+  .success,
+  [data-success],
+  .alert-success {
+    color: var(--success-foreground);
+    background-color: var(--success);
+    border-color: var(--success);
+  }
+
+  // Ensure no conflicts with our global theme
+  * {
+    box-sizing: border-box;
+  }
+}
+
+.dark .markdown-body {
+  color: var(--foreground);
+  background-color: var(--background);
+
+  blockquote {
+    background-color: var(--muted);
+    border-left-color: var(--primary);
+    color: var(--muted-foreground);
+  }
+
+  pre {
+    background-color: rgb(30, 30, 30);
+    border-color: var(--border);
+  }
+
+  table th {
+    background-color: var(--table-th);
+  }
+
+  table tr:nth-child(even) {
+    background-color: var(--table-row);
+  }
+
+  .success,
+  [data-success],
+  .alert-success {
+    color: var(--success-foreground);
+    background-color: var(--success);
+    border-color: var(--success);
+  }
+
+  li>code {
+    font-weight: 600;
+    background-color: rgb(91, 154, 194);
+    color: black;
+    border-radius: 0;
+  }
+
+}
+
+// =============================================================================
+// Component Styles
+// =============================================================================
+
+// Mermaid Chart Styles
+.mermaid {
+  display: block !important;
+  text-align: center;
+  margin: var(--spacing-xl) 0;
+  background: white;
+
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  min-height: 100px;
+
+  svg {
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+
+}
+
+// Mermaid Wrapper Styles
+.mermaid-wrapper {
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+
+  transition: all 0.2s ease;
+  width: 100%;
+  height: auto;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  &:hover,
+  &.hover {
+    cursor: grab;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  &.panning {
+    cursor: grabbing;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: block;
+  }
+}
+
+.dark .mermaid {
+  background: rgb(53, 88, 53);
+}
+
+.dark .mermaid-wrapper {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+  .cluster rect {
+    fill: #7f7f59 !important;
+  }
+
+  &:hover,
+  &.hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+
+  svg {
+
+    marker path,
+    .edge line,
+    .edge path[marker-end],
+    .edge path[marker-start],
+    .edge path[marker-mid],
+    .actor line {
+      stroke: white !important;
+      fill: white !important;
+    }
+
+    .edgePaths path {
+      stroke: white !important;
+    }
+
+    .messageText {
+      fill: white !important;
+    }
+
+    line {
+      stroke: white !important;
+    }
+
+    path.messageLine0,
+    path.messageLine1,
+    path.messageLine2,
+    path.messageLine3,
+    path.messageLine4 {
+      stroke: white !important;
+    }
+  }
+
+}
+
+// =============================================================================
+// Basic Math Rendering Fallback Styles
+// =============================================================================
+
+.math-inline {
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.1em 0.2em;
+  border-radius: 0.2em;
+  font-size: 0.9em;
+}
+
+.math-display {
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.5em;
+  border-radius: 0.3em;
+  margin: 1em 0;
+  text-align: center;
+  font-size: 1.1em;
+  border-left: 3px solid var(--primary);
+}
+
+// =============================================================================
+// Mathpix Markdown Styles
+// =============================================================================
+
+.mathpix-markdown {
+  font-family: var(--font-sans);
+  line-height: var(--line-height-normal);
+  //color: var(--foreground);
+
+  // Enhanced MathJax styling
+  .mjx-container {
+    font-family: var(--font-math);
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    display: inline-block;
+    line-height: 0;
+    text-align: left;
+    text-indent: 0;
+    text-rendering: auto;
+    text-transform: none;
+    word-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    float: none;
+    direction: ltr;
+    max-width: none;
+    max-height: none;
+    min-width: 0;
+    min-height: 0;
+    width: auto;
+    height: auto;
+    position: relative;
+    overflow: visible;
+  }
+
+  .mjx-math {
+    font-family: var(--font-math);
+    display: inline-block;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+    text-indent: 0;
+    text-rendering: auto;
+    text-transform: none;
+    word-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    float: none;
+    direction: ltr;
+    max-width: none;
+    max-height: none;
+    min-width: 0;
+    min-height: 0;
+    width: auto;
+    height: auto;
+    position: relative;
+  }
+
+  // MathJax SVG styling
+  .MathJax_SVG {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+  }
+
+  // MathJax display math styling
+  .MathJax_Display {
+    text-align: center;
+    margin: 1em 0;
+    position: relative;
+    text-indent: 0;
+    text-rendering: auto;
+    text-transform: none;
+    word-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    float: none;
+    direction: ltr;
+    max-width: none;
+    max-height: none;
+    min-width: 0;
+    min-height: 0;
+    width: auto;
+    height: auto;
+  }
+
+  // MathJax inline math styling
+  .MathJax {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+  }
+
+  // Dark mode support for MathJax
+  .dark .MathJax_SVG {
+    filter: invert(1) hue-rotate(180deg);
+  }
+
+  .dark .mjx-container {
+    color: var(--foreground);
+  }
+
+  .dark .mjx-math {
+    color: var(--foreground);
+  }
+
+  // Math styling
+  .math-inline {
+    display: inline-block;
+    margin: 0 2px;
+    vertical-align: middle;
+  }
+
+  .math-display {
+    display: block;
+    text-align: center;
+    margin: var(--spacing-xl) 0;
+    padding: var(--spacing-lg);
+    background: var(--muted);
+    border-radius: var(--radius-lg);
+    border-left: 4px solid var(--primary);
+    overflow-x: auto;
+  }
+
+  // Table styling
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: var(--spacing-xl) 0;
+    border: 1px solid var(--border);
+
+    th,
+    td {
+      border: 1px solid var(--border);
+      padding: var(--spacing-sm) var(--spacing-md);
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--muted);
+      font-weight: 600;
+    }
+  }
+
+  // Code styling
+  pre {
+    background-color: var(--muted);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    overflow-x: auto;
+    border: 1px solid var(--border);
+  }
+
+  code {
+    background-color: var(--muted);
+    padding: 2px var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  // Blockquote styling
+  blockquote {
+    border-left: 4px solid var(--primary);
+    margin: var(--spacing-xl) 0;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    background-color: var(--muted);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+  }
+
+  // List styling
+  ul,
+  ol {
+    padding-left: var(--spacing-xxl);
+    margin: var(--spacing-lg) 0;
+
+    li {
+      margin: var(--spacing-sm) 0;
+    }
+  }
+
+  // Heading styling
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: var(--spacing-xxl) 0 var(--spacing-lg) 0;
+    font-weight: 600;
+    line-height: var(--line-height-tight);
+    color: var(--foreground);
+  }
+
+  h1 {
+    font-size: var(--font-size-4xl);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: var(--spacing-sm);
+  }
+
+  h2 {
+    font-size: var(--font-size-3xl);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: var(--spacing-sm);
+  }
+
+  h3 {
+    font-size: var(--font-size-2xl);
+  }
+
+  // Paragraph styling
+  p {
+    margin: var(--spacing-lg) 0;
+    line-height: var(--line-height-normal);
+  }
+
+  // Link styling
+  a {
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-bottom-color 0.2s ease;
+
+    &:hover {
+      border-bottom-color: var(--primary);
+    }
+  }
+
+  // Image styling
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  // Horizontal rule styling
+  hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: var(--spacing-xxl) 0;
+  }
+
+  // Emphasis styling
+  strong {
+    font-weight: 700;
+    color: var(--foreground);
+  }
+
+  // Dark theme filename-description styling
+  strong.filename-description {
+    background: var(--muted);
+    border-color: var(--border);
+
+    .filename {
+      color: var(--primary);
+    }
+
+    .description {
+      color: var(--muted-foreground);
+    }
+  }
+
+  // Dark theme underscore content styling
+  strong.underscore-content {
+    background: linear-gradient(135deg, var(--primary), var(--chart-1));
+    border-color: var(--primary);
+    color: white;
+
+    .content {
+      color: white;
+    }
+
+    &:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  // Dark theme numbered section styling
+  strong.numbered-section {
+    background: var(--chart-2);
+    border-color: var(--chart-2);
+    color: white;
+
+    .number {
+      color: white;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .description {
+      color: white;
+    }
+
+    &:hover {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  // Dark theme space-separated styling
+  strong.space-separated {
+    background: linear-gradient(135deg, var(--chart-3), var(--chart-4));
+    border-color: var(--chart-3);
+    color: white;
+
+    .content {
+      color: white;
+    }
+
+    &:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  em {
+    font-style: italic;
+    color: var(--muted-foreground);
+  }
+
+  // Strikethrough styling
+  strike {
+    text-decoration: line-through;
+    color: var(--muted-foreground);
+  }
+
+  // Abbreviation styling
+  abbr {
+    border-bottom: 1px dotted var(--border);
+    cursor: help;
+  }
+
+  // Definition list styling
+  dl {
+    margin: var(--spacing-xl) 0;
+
+    dt {
+      font-weight: 600;
+      color: var(--foreground);
+      margin-top: var(--spacing-lg);
+    }
+
+    dd {
+      margin-left: var(--spacing-xl);
+      margin-top: var(--spacing-sm);
+      color: var(--muted-foreground);
+    }
+  }
+
+  // Footnote styling
+  .footnote {
+    font-size: 0.9em;
+    color: var(--muted-foreground);
+    border-top: 1px solid var(--border);
+    margin-top: var(--spacing-xxl);
+    padding-top: var(--spacing-lg);
+  }
+
+  .footnote-ref {
+    font-size: 0.8em;
+    vertical-align: super;
+    color: var(--primary);
+  }
+
+  // Chemistry SMILES styling
+  .smiles {
+    font-family: var(--font-mono);
+    background-color: var(--muted);
+    padding: 4px var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+
+  // Theorem and proof styling
+  .theorem {
+    background-color: var(--muted);
+    border-left: 4px solid var(--chart-1);
+    padding: var(--spacing-lg);
+    margin: var(--spacing-xl) 0;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+
+    .theorem-title {
+      font-weight: 600;
+      color: var(--chart-1);
+      margin-bottom: var(--spacing-md);
+      font-size: 1.1em;
+    }
+  }
+
+  .proof {
+    background-color: var(--muted);
+    border-left: 4px solid var(--chart-2);
+    padding: var(--spacing-lg);
+    margin: var(--spacing-xl) 0;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+
+    .proof-title {
+      font-weight: 600;
+      color: var(--chart-2);
+      margin-bottom: var(--spacing-md);
+      font-size: 1.1em;
+    }
+  }
+
+  // Abstract styling
+  .abstract {
+    background-color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-xl);
+    margin: var(--spacing-xxl) 0;
+    font-style: italic;
+
+    .abstract-title {
+      font-weight: 600;
+      margin-bottom: var(--spacing-md);
+      color: var(--foreground);
+    }
+  }
+
+  // Author list styling
+  .authors {
+    text-align: center;
+    margin: var(--spacing-xl) 0;
+    color: var(--muted-foreground);
+    font-style: italic;
+  }
+
+  // Section styling
+  .section {
+    margin: var(--spacing-xxl) 0;
+
+    .section-title {
+      font-weight: 600;
+      color: var(--foreground);
+      margin-bottom: var(--spacing-lg);
+    }
+  }
+}
+
+// =============================================================================
+// Responsive Design
+// =============================================================================
+
+@media (min-width: 768px) {
+  .mathpix-markdown {
+    font-size: 0.95em;
+
+    h1 {
+      font-size: 1.75em;
+    }
+
+    h2 {
+      font-size: 1.4em;
+    }
+
+    pre {
+      padding: var(--spacing-md);
+    }
+
+    blockquote {
+      padding: var(--spacing-md) var(--spacing-lg);
+    }
+  }
+}

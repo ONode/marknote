@@ -1,0 +1,234 @@
+// =============================================================================
+// Main SASS File - Markdown Viewer Styles
+// =============================================================================
+
+// Import partials using @use
+@use 'sass:map';
+@use 'variables' as *;
+@use 'mixins' as *;
+@use 'theme' as *;
+@use 'ui-components' as *;
+@use 'icons' as *;
+@use 'katex' as *;
+@use './../../node_modules/highlight.js/scss/atom-one-dark-reasonable.scss' as *;
+//@use 'mermaid-custom' as *;
+
+// =============================================================================
+// Math Rendering Styles
+// =============================================================================
+
+// Basic math styling for fallback rendering
+.math-inline {
+  background-color: #f0f0f0;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+  border: 1px solid #ddd;
+  display: inline-block;
+}
+
+.math-display {
+  background-color: #f8f8f8;
+  padding: 8px;
+  border-radius: 5px;
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+  border: 1px solid #ddd;
+  margin: 10px 0;
+  text-align: center;
+  display: block;
+}
+
+// =============================================================================
+// Base Styles
+// =============================================================================
+
+// CSS variables are now defined in _theme.scss to avoid conflicts
+
+// Ensure CSS variables are applied to the root element
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+// Dark theme is now defined in _theme.scss to avoid conflicts
+
+* {
+  border-color: var(--border);
+  outline-color: var(--ring);
+  outline-width: 2px;
+  outline-offset: 2px;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  line-height: var(--line-height-normal);
+}
+
+
+// =============================================================================
+// Utility Classes
+// =============================================================================
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.font-bold { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+.font-normal { font-weight: 400; }
+
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--secondary); }
+.text-muted { color: var(--muted-foreground); }
+
+.bg-primary { background-color: var(--primary); }
+.bg-secondary { background-color: var(--secondary); }
+.bg-muted { background-color: var(--muted); }
+
+.rounded { border-radius: var(--radius); }
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+
+.shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+.shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+
+// =============================================================================
+// Enhanced UI Components
+// =============================================================================
+
+// Button styles
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  
+  &:focus {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  &.btn-primary {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--primary) 90%, black);
+    }
+  }
+  
+  &.btn-secondary {
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+    
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--secondary) 90%, black);
+    }
+  }
+  
+  &.btn-outline {
+    background-color: transparent;
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    
+    &:hover:not(:disabled) {
+      background-color: var(--muted);
+    }
+  }
+  
+  &.btn-lg {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-base);
+  }
+  
+  &.btn-sm {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+}
+
+// Card component
+.card {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  background: var(--card);
+  
+  .card-header {
+    margin-bottom: var(--spacing-md);
+    
+    .card-title {
+      font-size: var(--font-size-xl);
+      font-weight: 600;
+      color: var(--card-foreground);
+      margin: 0;
+    }
+    
+    .card-description {
+      color: var(--muted-foreground);
+      margin-top: var(--spacing-xs);
+    }
+  }
+  
+  .card-content {
+    color: var(--card-foreground);
+  }
+  
+  .card-footer {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border);
+  }
+}
+
+// Glass morphism effects
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  .dark & {
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+}
+
+// Gradient text effects
+.text-gradient-primary {
+  background: linear-gradient(135deg, var(--primary), var(--chart-1));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-secondary {
+  background: linear-gradient(135deg, var(--secondary), var(--chart-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.overflow-y-auto{
+  overflow-y: auto;
+}

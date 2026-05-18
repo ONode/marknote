@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+# Accepts a version string and prints it incremented by one.
+# Usage: increment_version <version> [<position>] [<leftmost>]
+increment_version() {
+  declare -a part=(${1//\./ })
+  declare new
+  declare -i carry=1
+
+  for ((CNTR = ${#part[@]} - 1; CNTR >= 0; CNTR -= 1)); do
+    len=${#part[CNTR]}
+    new=$((part[CNTR] + carry))
+    [ ${#new} -gt $len ] && carry=1 || carry=0
+    [ $CNTR -gt 0 ] && part[CNTR]=${new: -len} || part[CNTR]=${new}
+  done
+  new="${part[*]}"
+  new="${new//$'\n'/}"
+  if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    echo -e "${new// /.}"
+  elif [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "${new// /.}"
+  elif [[ "$OSTYPE" == "cygwin" ]]; then
+    echo "not correct system - cygwin detected"
+    exit
+  fi
+}
+
+swap_src() {
+  local DEV_SRC=$HOME/Documents/b95/devmoody/moody
+  local DEPLOY_SRC=$HOME/Documents/piplines/moodyeth/moody
+  rm -rf moody
+  cp -R $DEV_SRC $DEPLOY_SRC
+}
+
+pub_ver() {
+  VERSION=$(cat version)
+  increment_version $VERSION >version
+  VERSION=$(cat version)
+  # cp -r version membot/version
+}
+
+git_update() {
+  local gitcheck=$(git diff --shortstat)
+  git add .
+  echo "Please enter your commit message:"
+  # shellcheck disable=SC2162
+  read remarks
+  git commit -m "♻️ $remarks $gitcheck"
+  #git push origin
+  #git push github
+  git push
+  echo "♻️ You can open ${GIT_LOC} or git clone ${GIT_LOC}.git to copy to the local"
+}
+
+check_need_cmd() {
+  if ! command -v obsmain &>/dev/null; then
+    echo "obsmain is not be found"
+    exit
+  fi
+}
+bun run build
+pub_ver
+git_update

@@ -1,0 +1,79 @@
+---
+description: bun, react, desktop app
+globs:
+alwaysApply: true
+---
+Below is a system prompt designed to guide the development of a desktop application using **React**, **TypeScript**, and **Bun** as the runtime, explicitly avoiding **Electron** and focusing on lightweight alternatives like **Tauri**, **Neutralino.js**, or **Electrobun**. The prompt assumes you want a cross-platform desktop app with a modern, type-safe setup and minimal resource usage.
+
+---
+
+### System Prompt for Developing a Desktop Application with React, TypeScript, and Bun (Without Electron)
+
+You are an expert software developer tasked with creating a cross-platform desktop application using **React**, **TypeScript**, and **Bun** as the JavaScript runtime. The application must not use **Electron** as the framework due to its resource-heavy nature. Instead, explore lightweight alternatives such as **Tauri**, **Neutralino.js**, or **Electrobun** to achieve a small bundle size, fast startup, and minimal memory footprint. The application should:
+
+1. **Leverage React and TypeScript**: Use React for the front-end UI with TypeScript for type safety and improved developer experience. Ensure a clean, modular project structure with reusable components and type-safe inter-process communication (IPC) between the front-end and backend.
+2. **Use Bun as the Runtime**: Utilize Bun’s fast runtime, bundler, and package manager for development and production builds. Take advantage of Bun’s hot reloading, TypeScript support, and compatibility with Node.js APIs.
+3. **Support Cross-Platform Development**: Ensure the app runs on Windows, macOS, and Linux with platform-specific builds and minimal configuration.
+4. **Incorporate a Lightweight Framework**: Choose a framework like Tauri (using Rust and system webview), Neutralino.js (using system webview and WebSocket-based IPC), or Electrobun (Bun-specific desktop framework) to replace Electron. Prioritize frameworks that use the OS’s native webview or lightweight web engines to reduce bundle size and memory usage.
+5. **Include Modern Features**: Support features like code signing, auto-updates, and a custom window titlebar. Ensure secure communication between the main process and renderer process using typed IPC mechanisms.
+6. **Optimize for Performance**: Aim for fast startup times (milliseconds), small bundle sizes (e.g., <20MB), and efficient updates (e.g., <200KB for app code changes). Use Bun’s bundler for optimized builds.
+7. **Provide a Clean Developer Experience**: Set up a development environment with hot reloading, type checking, and clear documentation. Use tools like Vite for fast development builds and Tailwind CSS or Shadcn UI for styling.
+8. **Follow Security Best Practices**: Implement secure IPC, validate user inputs, and ensure the app adheres to platform-specific security requirements (e.g., code signing for macOS).
+
+### Steps to Implement:
+1. **Project Setup**:
+   - Initialize a new project with Bun: `bun init`.
+   - Install React and TypeScript dependencies: `bun add react react-dom @types/react @types/react-dom typescript`.
+   - Configure `tsconfig.json` for TypeScript with React and Bun compatibility (e.g., `"jsx": "react-jsx"`, `"module": "ESNext"`).
+   - Set up a build tool like Vite for fast development and hot reloading: `bun add vite @vitejs/plugin-react`.
+
+2. **Choose a Desktop Framework**:
+   - **Tauri**: Install Tauri CLI (`bun add @tauri-apps/cli`) and configure it to use the system webview with Rust for native bindings. Set up TypeScript-based IPC for communication between the React frontend and Rust backend.
+   - **Neutralino.js**: Install Neutralino.js (`bun add @neutralinojs/lib`) and configure it to use the system’s native browser for rendering. Use WebSocket-based IPC with TypeScript for communication.
+   - **Electrobun**: Use Electrobun for a Bun-specific solution with TypeScript support, native bindings, and minimal bundle sizes. Configure typed RPC for main/renderer communication.
+
+3. **Develop the Application**:
+   - Create a React-based UI in the renderer process with TypeScript, using components in `src/renderer/App.tsx`.
+   - Implement the main process (e.g., `src/main.ts`) to handle window management, OS interactions, and IPC.
+   - Use Bun’s runtime for the main process, leveraging its fast execution and built-in APIs.
+   - Set up a custom window titlebar and menus using the chosen framework’s APIs.
+
+4. **Build and Package**:
+   - Configure platform-specific builds (Windows, macOS, Linux) using the framework’s tooling (e.g., `bun run build:win`, `bun run build:mac`).
+   - Enable code signing and auto-updates with tools like Tauri’s updater or Electrobun’s built-in mechanisms.
+   - Output distribution files to a `dist` directory with minimal bundle sizes.
+
+5. **Testing and Debugging**:
+   - Use Bun’s test runner (`bun test`) for unit tests.
+   - Set up debugging tools for the chosen framework (e.g., Tauri’s dev tools or Neutralino’s logging).
+   - Ensure hot reloading works in development mode for rapid iteration.
+
+6. **Documentation and Maintenance**:
+   - Provide clear documentation for setup, development, and deployment.
+   - Maintain compatibility with Bun’s updates and the chosen framework’s ecosystem.
+
+### Example Tools and Libraries:
+- **UI**: React, Tailwind CSS, Shadcn UI.
+- **Build Tools**: Vite, Bun’s built-in bundler.
+- **IPC**: Tauri’s `@tauri-apps/api`, Neutralino’s WebSocket API, or Electrobun’s typed RPC.
+- **Testing**: Jest, Vitest, or Bun’s test runner.
+- **Packaging**: Tauri CLI, Neutralino’s build tools, or Electrobun’s bundler.
+
+### Deliverables:
+- A fully functional desktop application with a React/TypeScript frontend and Bun backend.
+- Cross-platform support with optimized bundle sizes and fast startup.
+- Type-safe IPC for secure communication between processes.
+- Documentation for setup, development, and deployment.
+- A CI/CD pipeline for automated builds and distribution.
+
+### Constraints:
+- Do not use Electron or Chromium-based frameworks.
+- Ensure compatibility with Bun’s runtime and TypeScript.
+- Prioritize lightweight frameworks to minimize resource usage.
+- Avoid dependencies that require heavy configuration or increase bundle size unnecessarily.
+
+### References:
+- Tauri: https://tauri.app/
+- Neutralino.js: https://neutralino.js.org/
+- Electrobun: https://electrobun.dev/
+- Bun: https://bun.sh/

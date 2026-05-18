@@ -1,0 +1,319 @@
+// =============================================================================
+// Mermaid Custom Styling
+// =============================================================================
+// Custom CSS overrides for Mermaid SVG stroke and arrow colors
+// Based on analysis of Mermaid-generated SVG elements
+
+// =============================================================================
+// CSS Variables for Mermaid Styling
+// =============================================================================
+
+:root {
+  // Light theme colors
+  --mermaid-primary-stroke: #667eea;
+  --mermaid-secondary-stroke: #5a6fd8;
+  --mermaid-arrow-stroke: #4c63d2;
+  --mermaid-text-color: #374151;
+  --mermaid-background-color: #ffffff;
+  --mermaid-node-fill: #ffffff;
+  --mermaid-edge-stroke-width: 2px;
+  --mermaid-node-stroke-width: 2px;
+}
+
+// Dark theme colors
+.dark {
+  --mermaid-primary-stroke: #a78bfa;
+  --mermaid-secondary-stroke: #8b5cf6;
+  --mermaid-arrow-stroke: #7c3aed;
+  --mermaid-text-color: #f3f4f6;
+  --mermaid-background-color: #1f2937;
+  --mermaid-node-fill: #1f2937;
+}
+
+// =============================================================================
+// Global Mermaid SVG Styling
+// =============================================================================
+
+.mermaid {
+  // Ensure proper display
+  display: block !important;
+  text-align: center;
+  margin: var(--spacing-xl) 0;
+  background: var(--mermaid-background-color);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  min-height: 100px;
+  
+  svg {
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    
+    // Apply CSS variables to the SVG root
+    --primary-stroke: var(--mermaid-primary-stroke);
+    --secondary-stroke: var(--mermaid-secondary-stroke);
+    --arrow-stroke: var(--mermaid-arrow-stroke);
+    --text-color: var(--mermaid-text-color);
+    --background-color: var(--mermaid-background-color);
+  }
+}
+
+// =============================================================================
+// Node Element Styling
+// =============================================================================
+
+// Rectangle nodes (process boxes, start/end nodes)
+.mermaid svg .node rect {
+  stroke: var(--mermaid-primary-stroke) !important;
+  stroke-width: var(--mermaid-node-stroke-width) !important;
+  fill: var(--mermaid-node-fill) !important;
+}
+
+// Circle nodes
+.mermaid svg .node circle {
+  stroke: var(--mermaid-primary-stroke) !important;
+  stroke-width: var(--mermaid-node-stroke-width) !important;
+  fill: var(--mermaid-node-fill) !important;
+}
+
+// Polygon nodes (diamonds for decisions)
+.mermaid svg .node polygon {
+  stroke: var(--mermaid-primary-stroke) !important;
+  stroke-width: var(--mermaid-node-stroke-width) !important;
+  fill: var(--mermaid-node-fill) !important;
+}
+
+// Ellipse nodes
+.mermaid svg .node ellipse {
+  stroke: var(--mermaid-primary-stroke) !important;
+  stroke-width: var(--mermaid-node-stroke-width) !important;
+  fill: var(--mermaid-node-fill) !important;
+}
+
+// All node shapes (comprehensive selector)
+.mermaid svg .node rect,
+.mermaid svg .node circle,
+.mermaid svg .node polygon,
+.mermaid svg .node ellipse {
+  stroke: var(--mermaid-primary-stroke) !important;
+  stroke-width: var(--mermaid-node-stroke-width) !important;
+  fill: var(--mermaid-node-fill) !important;
+}
+
+// =============================================================================
+// Edge and Arrow Styling
+// =============================================================================
+
+// Edge paths (connections between nodes)
+.mermaid svg .edge path {
+  stroke: var(--mermaid-arrow-stroke) !important;
+  stroke-width: var(--mermaid-edge-stroke-width) !important;
+  fill: none !important;
+}
+
+// Edge lines
+.mermaid svg .edge line {
+  stroke: var(--mermaid-arrow-stroke) !important;
+  stroke-width: var(--mermaid-edge-stroke-width) !important;
+}
+
+// All edge elements
+.mermaid svg .edge path,
+.mermaid svg .edge line {
+  stroke: var(--mermaid-arrow-stroke) !important;
+  stroke-width: var(--mermaid-edge-stroke-width) !important;
+}
+
+// =============================================================================
+// Arrow Marker Styling
+// =============================================================================
+
+// Arrow markers (arrow heads)
+.mermaid svg marker path {
+  fill: var(--mermaid-arrow-stroke) !important;
+  stroke: var(--mermaid-arrow-stroke) !important;
+}
+
+// Specific arrow marker types
+.mermaid svg marker#arrowhead path {
+  fill: var(--mermaid-arrow-stroke) !important;
+  stroke: var(--mermaid-arrow-stroke) !important;
+}
+
+.mermaid svg marker#arrowhead-2 path {
+  fill: var(--mermaid-arrow-stroke) !important;
+  stroke: var(--mermaid-arrow-stroke) !important;
+}
+
+// =============================================================================
+// Text Styling
+// =============================================================================
+
+// Node text
+.mermaid svg .node text {
+  fill: var(--mermaid-text-color) !important;
+  font-family: var(--font-sans) !important;
+}
+
+// Edge labels
+.mermaid svg .edgeLabel text {
+  fill: var(--mermaid-text-color) !important;
+  font-family: var(--font-sans) !important;
+}
+
+// All text elements
+.mermaid svg text {
+  fill: var(--mermaid-text-color) !important;
+  font-family: var(--font-sans) !important;
+}
+
+// =============================================================================
+// Specific Diagram Type Styling
+// =============================================================================
+
+// Flowchart specific
+.mermaid svg .flowchart .node rect,
+.mermaid svg .flowchart .node circle,
+.mermaid svg .flowchart .node polygon {
+  stroke: var(--mermaid-primary-stroke) !important;
+  stroke-width: var(--mermaid-node-stroke-width) !important;
+}
+
+.mermaid svg .flowchart .edge path,
+.mermaid svg .flowchart .edge line {
+  stroke: var(--mermaid-arrow-stroke) !important;
+  stroke-width: var(--mermaid-edge-stroke-width) !important;
+}
+
+// Sequence diagram specific
+.mermaid svg .sequence .actor line {
+  stroke: var(--mermaid-primary-stroke) !important;
+  stroke-width: var(--mermaid-node-stroke-width) !important;
+}
+
+.mermaid svg .sequence .messageLine0,
+.mermaid svg .sequence .messageLine1 {
+  stroke: var(--mermaid-arrow-stroke) !important;
+  stroke-width: var(--mermaid-edge-stroke-width) !important;
+}
+
+.mermaid svg .sequence .activation rect {
+  stroke: var(--mermaid-primary-stroke) !important;
+  stroke-width: 1px !important;
+  fill: var(--mermaid-node-fill) !important;
+}
+
+// Class diagram specific
+.mermaid svg .class .node rect {
+  stroke: var(--mermaid-primary-stroke) !important;
+  stroke-width: var(--mermaid-node-stroke-width) !important;
+  fill: var(--mermaid-node-fill) !important;
+}
+
+.mermaid svg .class .edge path {
+  stroke: var(--mermaid-arrow-stroke) !important;
+  stroke-width: var(--mermaid-edge-stroke-width) !important;
+}
+
+// =============================================================================
+// Advanced Selectors
+// =============================================================================
+
+// Attribute-based selectors for specific colors
+.mermaid svg [stroke="#333333"] {
+  stroke: var(--mermaid-primary-stroke) !important;
+}
+
+.mermaid svg [stroke="#666666"] {
+  stroke: var(--mermaid-secondary-stroke) !important;
+}
+
+.mermaid svg [fill="#ffffff"] {
+  fill: var(--mermaid-node-fill) !important;
+}
+
+// Class-based selectors for specific nodes/edges
+.mermaid svg .node-0 rect,
+.mermaid svg .node-1 rect,
+.mermaid svg .node-2 rect {
+  stroke: var(--mermaid-primary-stroke) !important;
+}
+
+.mermaid svg .edge-0 path,
+.mermaid svg .edge-1 path,
+.mermaid svg .edge-2 path {
+  stroke: var(--mermaid-arrow-stroke) !important;
+}
+
+// =============================================================================
+// Responsive Design
+// =============================================================================
+
+@media (max-width: 768px) {
+  .mermaid svg {
+    --mermaid-primary-stroke: #4f46e5;
+    --mermaid-arrow-stroke: #3730a3;
+  }
+  
+  .mermaid svg .node rect,
+  .mermaid svg .node circle,
+  .mermaid svg .node polygon {
+    stroke-width: 1.5px !important;
+  }
+  
+  .mermaid svg .edge path,
+  .mermaid svg .edge line {
+    stroke-width: 1.5px !important;
+  }
+}
+
+// =============================================================================
+// High Contrast Mode
+// =============================================================================
+
+@media (prefers-contrast: high) {
+  .mermaid svg {
+    --mermaid-primary-stroke: #000000;
+    --mermaid-arrow-stroke: #000000;
+    --mermaid-text-color: #000000;
+  }
+  
+  .dark .mermaid svg {
+    --mermaid-primary-stroke: #ffffff;
+    --mermaid-arrow-stroke: #ffffff;
+    --mermaid-text-color: #ffffff;
+  }
+}
+
+// =============================================================================
+// Animation and Transitions
+// =============================================================================
+
+.mermaid svg .node rect,
+.mermaid svg .node circle,
+.mermaid svg .node polygon,
+.mermaid svg .edge path,
+.mermaid svg .edge line {
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+.mermaid svg .node:hover rect,
+.mermaid svg .node:hover circle,
+.mermaid svg .node:hover polygon {
+  stroke: var(--mermaid-secondary-stroke) !important;
+  stroke-width: calc(var(--mermaid-node-stroke-width) + 1px) !important;
+}
+
+// =============================================================================
+// Print Styles
+// =============================================================================
+
+@media print {
+  .mermaid svg {
+    --mermaid-primary-stroke: #000000;
+    --mermaid-arrow-stroke: #000000;
+    --mermaid-text-color: #000000;
+    --mermaid-background-color: #ffffff;
+    --mermaid-node-fill: #ffffff;
+  }
+}

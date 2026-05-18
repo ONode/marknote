@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid CSS Path Inspector</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .controls {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        select, button {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        button:hover {
+            background: #5a6fd8;
+        }
+        
+        .diagram-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .diagram-section {
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .mermaid {
+            margin: 20px 0;
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .analysis-panel {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .css-path {
+            background: #1a202c;
+            color: #68d391;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 3px solid #68d391;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        .element-info {
+            background: #e3f2fd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .stroke-info {
+            background: #fff3e0;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border-left: 4px solid #ff9800;
+        }
+        
+        .arrow-info {
+            background: #f3e5f5;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border-left: 4px solid #9c27b0;
+        }
+        
+        .color-preview {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ccc;
+            margin-right: 8px;
+            vertical-align: middle;
+            border-radius: 3px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .summary-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e1e5e9;
+        }
+        
+        .highlight {
+            background: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e1e5e9;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .tab.active {
+            border-bottom-color: #667eea;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Mermaid CSS Path Inspector</h1>
+            <p>Discover CSS selectors for stroke and arrow colors in Mermaid SVG elements</p>
+        </div>
+        
+        <div class="content">
+            <div class="controls">
+                <label><strong>Theme:</strong></label>
+                <select id="themeSelect" onchange="changeTheme()">
+                    <option value="default">Default</option>
+                    <option value="dark">Dark</option>
+                    <option value="forest">Forest</option>
+                    <option value="neutral">Neutral</option>
+                    <option value="base">Base</option>
+                </select>
+                
+                <button onclick="analyzeCSSPaths()">🔍 Analyze CSS Paths</button>
+                <button onclick="exportCSSData()">📤 Export CSS Data</button>
+                <button onclick="generateCustomCSS()">🎨 Generate Custom CSS</button>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('diagrams')">Diagrams</div>
+                <div class="tab" onclick="switchTab('analysis')">CSS Analysis</div>
+                <div class="tab" onclick="switchTab('custom')">Custom CSS</div>
+            </div>
+            
+            <div id="diagrams" class="tab-content active">
+                <div class="diagram-container">
+                    <div class="diagram-section">
+                        <h3>Flowchart</h3>
+                        <div class="mermaid" id="flowchart">
+                            graph TD
+                                A[Start] --> B{Decision}
+                                B -->|Yes| C[Success]
+                                B -->|No| D[Error]
+                                C --> E[End]
+                                D --> F[Retry]
+                                F --> B
+                        </div>
+                    </div>
+                    
+                    <div class="diagram-section">
+                        <h3>Sequence Diagram</h3>
+                        <div class="mermaid" id="sequence">
+                            sequenceDiagram
+                                participant A as Alice
+                                participant B as Bob
+                                A->>B: Message 1
+                                B-->>A: Response 1
+                                A-)B: Message 2
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="analysis" class="tab-content">
+                <div class="analysis-panel" id="cssAnalysis">
+                    <h3>🔍 CSS Path Analysis</h3>
+                    <p>Click "Analyze CSS Paths" to discover CSS selectors for Mermaid elements...</p>
+                </div>
+            </div>
+            
+            <div id="custom" class="tab-content">
+                <div class="analysis-panel" id="customCSS">
+                    <h3>🎨 Custom CSS Generator</h3>
+                    <p>Click "Generate Custom CSS" to create CSS overrides for Mermaid colors...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = 'default';
+        let cssAnalysisData = {};
+        
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: currentTheme,
+            securityLevel: "loose"
+        });
+        
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+        
+        function changeTheme() {
+            currentTheme = document.getElementById('themeSelect').value;
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: currentTheme,
+                securityLevel: "loose"
+            });
+            
+            // Re-render all diagrams
+            const diagrams = ['flowchart', 'sequence'];
+            diagrams.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.innerHTML = element.textContent;
+                }
+            });
+            
+            mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+        }
+        
+        function analyzeCSSPaths() {
+            const analysisDiv = document.getElementById('cssAnalysis');
+            analysisDiv.innerHTML = '<h3>🔍 Analyzing CSS Paths...</h3><p>Please wait...</p>';
+            
+            setTimeout(() => {
+                const svgs = document.querySelectorAll('.mermaid svg');
+                let analysisHTML = `<h3>🎯 CSS Path Analysis - Theme: ${currentTheme.toUpperCase()}</h3>`;
+                
+                cssAnalysisData = {
+                    theme: currentTheme,
+                    timestamp: new Date().toISOString(),
+                    svgs: []
+                };
+                
+                svgs.forEach((svg, svgIndex) => {
+                    analysisHTML += `<h4>📊 SVG ${svgIndex + 1} Analysis</h4>`;
+                    
+                    const svgData = {
+                        index: svgIndex,
+                        elements: []
+                    };
+                    
+                    // Analyze all elements with stroke attributes
+                    const strokeElements = svg.querySelectorAll('[stroke]');
+                    analysisHTML += `<div class="stroke-info">
+                        <strong>🎯 Stroke Elements (${strokeElements.length}):</strong><br>`;
+                    
+                    strokeElements.forEach((element, index) => {
+                        const stroke = element.getAttribute('stroke');
+                        const strokeWidth = element.getAttribute('stroke-width');
+                        const tagName = element.tagName;
+                        const className = element.getAttribute('class') || 'no-class';
+                        const id = element.getAttribute('id') || 'no-id';
+                        
+                        // Generate CSS selectors
+                        const cssSelectors = generateCSSSelectors(element, svg);
+                        
+                        const elementData = {
+                            tag: tagName,
+                            class: className,
+                            id: id,
+                            stroke: stroke,
+                            strokeWidth: strokeWidth,
+                            cssSelectors: cssSelectors
+                        };
+                        
+                        svgData.elements.push(elementData);
+                        
+                        analysisHTML += `<div class="element-info">
+                            <strong>${index + 1}. ${tagName}</strong> 
+                            <span class="color-preview" style="background-color: ${stroke}"></span>
+                            <code>${stroke}</code><br>
+                            <strong>CSS Selectors:</strong><br>`;
+                        
+                        cssSelectors.forEach(selector => {
+                            analysisHTML += `<div class="css-path">${selector}</div>`;
+                        });
+                        
+                        analysisHTML += `</div>`;
+                    });
+                    analysisHTML += '</div>';
+                    
+                    // Analyze arrow elements specifically
+                    const arrowElements = svg.querySelectorAll('path[marker-end], path[marker-start], marker path');
+                    analysisHTML += `<div class="arrow-info">
+                        <strong>🏹 Arrow Elements (${arrowElements.length}):</strong><br>`;
+                    
+                    arrowElements.forEach((element, index) => {
+                        const stroke = element.getAttribute('stroke');
+                        const fill = element.getAttribute('fill');
+                        const tagName = element.tagName;
+                        const className = element.getAttribute('class') || 'no-class';
+                        const id = element.getAttribute('id') || 'no-id';
+                        
+                        const cssSelectors = generateCSSSelectors(element, svg);
+                        
+                        analysisHTML += `<div class="element-info">
+                            <strong>${index + 1}. ${tagName}</strong><br>
+                            <span class="color-preview" style="background-color: ${stroke || fill}"></span>
+                            <code>stroke: ${stroke || 'none'}, fill: ${fill || 'none'}</code><br>
+                            <strong>CSS Selectors:</strong><br>`;
+                        
+                        cssSelectors.forEach(selector => {
+                            analysisHTML += `<div class="css-path">${selector}</div>`;
+                        });
+                        
+                        analysisHTML += `</div>`;
+                    });
+                    analysisHTML += '</div>';
+                    
+                    cssAnalysisData.svgs.push(svgData);
+                });
+                
+                // Generate summary
+                analysisHTML += generateCSSSummary();
+                
+                analysisDiv.innerHTML = analysisHTML;
+            }, 1000);
+        }
+        
+        function generateCSSSelectors(element, svg) {
+            const selectors = [];
+            const tagName = element.tagName.toLowerCase();
+            const className = element.getAttribute('class');
+            const id = element.getAttribute('id');
+            
+            // Basic selectors
+            selectors.push(`.mermaid svg ${tagName}`);
+            
+            if (className) {
+                selectors.push(`.mermaid svg ${tagName}.${className}`);
+                selectors.push(`.mermaid svg .${className}`);
+            }
+            
+            if (id) {
+                selectors.push(`.mermaid svg #${id}`);
+            }
+            
+            // Attribute selectors
+            const stroke = element.getAttribute('stroke');
+            if (stroke) {
+                selectors.push(`.mermaid svg ${tagName}[stroke="${stroke}"]`);
+            }
+            
+            // Specific Mermaid element selectors
+            if (className && className.includes('node')) {
+                selectors.push(`.mermaid svg .node ${tagName}`);
+                selectors.push(`.mermaid svg .node-${className.split(' ')[1]} ${tagName}`);
+            }
+            
+            if (className && className.includes('edge')) {
+                selectors.push(`.mermaid svg .edge ${tagName}`);
+                selectors.push(`.mermaid svg .edge-${className.split(' ')[1]} ${tagName}`);
+            }
+            
+            if (className && className.includes('arrow')) {
+                selectors.push(`.mermaid svg .arrow ${tagName}`);
+                selectors.push(`.mermaid svg marker ${tagName}`);
+            }
+            
+            // Theme-specific selectors
+            selectors.push(`.mermaid[data-theme="${currentTheme}"] svg ${tagName}`);
+            
+            return [...new Set(selectors)]; // Remove duplicates
+        }
+        
+        function generateCSSSummary() {
+            const allSelectors = new Set();
+            const strokeColors = new Set();
+            const fillColors = new Set();
+            
+            cssAnalysisData.svgs.forEach(svg => {
+                svg.elements.forEach(element => {
+                    element.cssSelectors.forEach(selector => allSelectors.add(selector));
+                    if (element.stroke) strokeColors.add(element.stroke);
+                });
+            });
+            
+            let summaryHTML = `<h3>📊 CSS Summary</h3>`;
+            summaryHTML += `<div class="summary-grid">`;
+            
+            summaryHTML += `<div class="summary-card">
+                <h4>🎯 Unique CSS Selectors (${allSelectors.size})</h4>
+                <ul>`;
+            allSelectors.forEach(selector => {
+                summaryHTML += `<li><code>${selector}</code></li>`;
+            });
+            summaryHTML += `</ul></div>`;
+            
+            summaryHTML += `<div class="summary-card">
+                <h4>🎨 Stroke Colors (${strokeColors.size})</h4>
+                <ul>`;
+            strokeColors.forEach(color => {
+                summaryHTML += `<li><span class="color-preview" style="background-color: ${color}"></span> <code>${color}</code></li>`;
+            });
+            summaryHTML += `</ul></div>`;
+            
+            summaryHTML += `</div>`;
+            
+            return summaryHTML;
+        }
+        
+        function generateCustomCSS() {
+            const customDiv = document.getElementById('customCSS');
+            customDiv.innerHTML = '<h3>🎨 Generating Custom CSS...</h3><p>Please wait...</p>';
+            
+            setTimeout(() => {
+                if (!cssAnalysisData.svgs || cssAnalysisData.svgs.length === 0) {
+                    customDiv.innerHTML = '<h3>⚠️ No Analysis Data</h3><p>Please run CSS analysis first.</p>';
+                    return;
+                }
+                
+                let customCSS = `/* Custom Mermaid CSS Overrides - Theme: ${currentTheme} */
+/* Generated on ${new Date().toLocaleString()} */
+
+/* Global Mermaid SVG Styling */
+.mermaid svg {
+    /* Override default stroke colors */
+    --primary-stroke: #667eea;
+    --secondary-stroke: #5a6fd8;
+    --arrow-stroke: #4c63d2;
+}
+
+/* Node Styling */
+.mermaid svg .node rect,
+.mermaid svg .node circle,
+.mermaid svg .node polygon {
+    stroke: var(--primary-stroke) !important;
+    stroke-width: 2px !important;
+}
+
+/* Edge/Arrow Styling */
+.mermaid svg .edge path,
+.mermaid svg .edge line {
+    stroke: var(--arrow-stroke) !important;
+    stroke-width: 2px !important;
+}
+
+/* Arrow Markers */
+.mermaid svg marker path {
+    fill: var(--arrow-stroke) !important;
+    stroke: var(--arrow-stroke) !important;
+}
+
+/* Text Styling */
+.mermaid svg .node text {
+    fill: var(--primary-stroke) !important;
+}
+
+/* Specific Element Overrides */
+`;
+
+                // Add specific overrides based on analysis
+                cssAnalysisData.svgs.forEach((svg, svgIndex) => {
+                    svg.elements.forEach((element, elementIndex) => {
+                        if (element.cssSelectors.length > 0) {
+                            customCSS += `
+/* SVG ${svgIndex + 1}, Element ${elementIndex + 1} - ${element.tag} */
+${element.cssSelectors[0]} {
+    stroke: #667eea !important;
+    stroke-width: 2px !important;
+}`;
+                        }
+                    });
+                });
+                
+                customCSS += `
+
+/* Dark Theme Overrides */
+.dark .mermaid svg {
+    --primary-stroke: #a78bfa;
+    --secondary-stroke: #8b5cf6;
+    --arrow-stroke: #7c3aed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .mermaid svg {
+        --primary-stroke: #4f46e5;
+        --arrow-stroke: #3730a3;
+    }
+}`;
+
+                customDiv.innerHTML = `<h3>🎨 Custom CSS for Mermaid Styling</h3>
+                <p>Copy and paste this CSS into your stylesheet to customize Mermaid colors:</p>
+                <pre>${customCSS}</pre>
+                <button onclick="copyToClipboard('${customCSS.replace(/'/g, "\\'")}')">📋 Copy CSS</button>`;
+            }, 500);
+        }
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('CSS copied to clipboard!');
+            });
+        }
+        
+        function exportCSSData() {
+            const dataStr = JSON.stringify(cssAnalysisData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `mermaid-css-paths-${currentTheme}-${Date.now()}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Initialize diagrams on page load
+        window.addEventListener('load', () => {
+            mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+        });
+    </script>
+</body>
+</html>

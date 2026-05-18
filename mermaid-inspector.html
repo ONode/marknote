@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid SVG Inspector</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .mermaid {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .analysis {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .stroke-info {
+            background: #e3f2fd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 3px solid #2196f3;
+        }
+        .fill-info {
+            background: #f3e5f5;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 3px solid #9c27b0;
+        }
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mermaid SVG Stroke Color Inspector</h1>
+        
+        <h2>Sample Mermaid Diagrams</h2>
+        
+        <h3>Flowchart</h3>
+        <div class="mermaid">
+            graph TD
+                A[Start] --> B{Is it working?}
+                B -->|Yes| C[Great!]
+                B -->|No| D[Debug]
+                D --> B
+                C --> E[Continue]
+        </div>
+        
+        <h3>Sequence Diagram</h3>
+        <div class="mermaid">
+            sequenceDiagram
+                participant Alice
+                participant Bob
+                Alice->>Bob: Hello Bob, how are you?
+                Bob-->>Alice: Great!
+                Alice-)Bob: See you later!
+        </div>
+        
+        <h3>Class Diagram</h3>
+        <div class="mermaid">
+            classDiagram
+                Animal <|-- Duck
+                Animal <|-- Fish
+                Animal : +int age
+                Animal : +String gender
+                Animal: +isMammal()
+                class Duck{
+                    +String beakColor
+                    +swim()
+                    +quack()
+                }
+        </div>
+        
+        <div class="analysis">
+            <h2>SVG Analysis Results</h2>
+            <div id="analysis-results">
+                <p>Click the button below to analyze the SVG stroke colors...</p>
+                <button onclick="analyzeSVGs()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Analyze SVG Elements
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: "default",
+            securityLevel: "loose"
+        });
+
+        function analyzeSVGs() {
+            const resultsDiv = document.getElementById('analysis-results');
+            resultsDiv.innerHTML = '<p>Analyzing SVG elements...</p>';
+            
+            // Wait for Mermaid to render
+            setTimeout(() => {
+                const svgs = document.querySelectorAll('.mermaid svg');
+                let analysisHTML = `<h3>Found ${svgs.length} SVG elements</h3>`;
+                
+                svgs.forEach((svg, svgIndex) => {
+                    analysisHTML += `<h4>SVG ${svgIndex + 1}</h4>`;
+                    
+                    // Find all elements with stroke attributes
+                    const elementsWithStroke = svg.querySelectorAll('[stroke]');
+                    analysisHTML += `<div class="stroke-info">
+                        <strong>Stroke Elements (${elementsWithStroke.length}):</strong><br>`;
+                    
+                    elementsWithStroke.forEach((element, index) => {
+                        const stroke = element.getAttribute('stroke');
+                        const strokeWidth = element.getAttribute('stroke-width');
+                        const tagName = element.tagName;
+                        const className = element.getAttribute('class') || 'no-class';
+                        const id = element.getAttribute('id') || 'no-id';
+                        
+                        analysisHTML += `${index + 1}. <strong>${tagName}</strong> (class: ${className}, id: ${id})<br>`;
+                        analysisHTML += `&nbsp;&nbsp;&nbsp;stroke: <code>${stroke}</code><br>`;
+                        analysisHTML += `&nbsp;&nbsp;&nbsp;stroke-width: <code>${strokeWidth || 'default'}</code><br><br>`;
+                    });
+                    analysisHTML += '</div>';
+                    
+                    // Find all elements with fill attributes
+                    const elementsWithFill = svg.querySelectorAll('[fill]');
+                    analysisHTML += `<div class="fill-info">
+                        <strong>Fill Elements (${elementsWithFill.length}):</strong><br>`;
+                    
+                    elementsWithFill.forEach((element, index) => {
+                        const fill = element.getAttribute('fill');
+                        const tagName = element.tagName;
+                        const className = element.getAttribute('class') || 'no-class';
+                        const id = element.getAttribute('id') || 'no-id';
+                        
+                        analysisHTML += `${index + 1}. <strong>${tagName}</strong> (class: ${className}, id: ${id})<br>`;
+                        analysisHTML += `&nbsp;&nbsp;&nbsp;fill: <code>${fill}</code><br><br>`;
+                    });
+                    analysisHTML += '</div>';
+                    
+                    // Show the complete SVG source
+                    analysisHTML += `<h4>Complete SVG Source ${svgIndex + 1}:</h4>`;
+                    analysisHTML += `<pre>${svg.outerHTML}</pre>`;
+                });
+                
+                resultsDiv.innerHTML = analysisHTML;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid Default Colors Analysis</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .content {
+            padding: 30px;
+        }
+        .diagram-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        .mermaid {
+            margin: 20px 0;
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .analysis-panel {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .color-box {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ccc;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        .stroke-info {
+            background: #e3f2fd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border-left: 4px solid #2196f3;
+        }
+        .fill-info {
+            background: #f3e5f5;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border-left: 4px solid #9c27b0;
+        }
+        .theme-selector {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #5a6fd8;
+        }
+        .summary {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Mermaid SVG Stroke Color Discovery</h1>
+            <p>Analyzing default stroke colors and styling in Mermaid diagrams</p>
+        </div>
+        
+        <div class="content">
+            <div class="theme-selector">
+                <h3>Theme Selection</h3>
+                <select id="themeSelect" onchange="changeTheme()">
+                    <option value="default">Default</option>
+                    <option value="dark">Dark</option>
+                    <option value="forest">Forest</option>
+                    <option value="neutral">Neutral</option>
+                    <option value="base">Base</option>
+                </select>
+                <button onclick="analyzeCurrentTheme()">Analyze Current Theme</button>
+                <button onclick="exportColors()">Export Color Data</button>
+            </div>
+            
+            <div class="diagram-section">
+                <h3>Flowchart Example</h3>
+                <div class="mermaid" id="flowchart">
+                    graph TD
+                        A[Start Process] --> B{Decision Point}
+                        B -->|Yes| C[Success Path]
+                        B -->|No| D[Error Path]
+                        C --> E[Complete]
+                        D --> F[Retry]
+                        F --> B
+                </div>
+            </div>
+            
+            <div class="diagram-section">
+                <h3>Sequence Diagram</h3>
+                <div class="mermaid" id="sequence">
+                    sequenceDiagram
+                        participant User
+                        participant System
+                        participant Database
+                        User->>System: Login Request
+                        System->>Database: Validate Credentials
+                        Database-->>System: User Data
+                        System-->>User: Login Success
+                </div>
+            </div>
+            
+            <div class="diagram-section">
+                <h3>Class Diagram</h3>
+                <div class="mermaid" id="class">
+                    classDiagram
+                        class Animal {
+                            +String name
+                            +int age
+                            +makeSound()
+                        }
+                        class Dog {
+                            +String breed
+                            +bark()
+                        }
+                        class Cat {
+                            +String color
+                            +meow()
+                        }
+                        Animal <|-- Dog
+                        Animal <|-- Cat
+                </div>
+            </div>
+            
+            <div class="analysis-panel" id="analysisResults">
+                <h3>🔍 SVG Analysis Results</h3>
+                <p>Click "Analyze Current Theme" to see detailed stroke color information...</p>
+            </div>
+            
+            <div class="summary" id="colorSummary">
+                <h3>📊 Color Summary</h3>
+                <p>Analysis results will appear here...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = 'default';
+        
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: currentTheme,
+            securityLevel: "loose"
+        });
+        
+        function changeTheme() {
+            currentTheme = document.getElementById('themeSelect').value;
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: currentTheme,
+                securityLevel: "loose"
+            });
+            
+            // Re-render all diagrams
+            const diagrams = ['flowchart', 'sequence', 'class'];
+            diagrams.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.innerHTML = element.textContent;
+                }
+            });
+            
+            mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+        }
+        
+        function analyzeCurrentTheme() {
+            const resultsDiv = document.getElementById('analysisResults');
+            const summaryDiv = document.getElementById('colorSummary');
+            
+            resultsDiv.innerHTML = '<h3>🔍 Analyzing SVG Elements...</h3><p>Please wait...</p>';
+            
+            setTimeout(() => {
+                const svgs = document.querySelectorAll('.mermaid svg');
+                let analysisHTML = `<h3>🎨 Theme: ${currentTheme.toUpperCase()}</h3>`;
+                analysisHTML += `<p>Found ${svgs.length} SVG elements to analyze</p>`;
+                
+                const allStrokeColors = new Set();
+                const allFillColors = new Set();
+                const elementDetails = [];
+                
+                svgs.forEach((svg, svgIndex) => {
+                    analysisHTML += `<h4>📊 SVG ${svgIndex + 1} Analysis</h4>`;
+                    
+                    // Analyze stroke elements
+                    const strokeElements = svg.querySelectorAll('[stroke]');
+                    analysisHTML += `<div class="stroke-info">
+                        <strong>🎯 Stroke Elements (${strokeElements.length}):</strong><br>`;
+                    
+                    strokeElements.forEach((element, index) => {
+                        const stroke = element.getAttribute('stroke');
+                        const strokeWidth = element.getAttribute('stroke-width');
+                        const tagName = element.tagName;
+                        const className = element.getAttribute('class') || 'no-class';
+                        const id = element.getAttribute('id') || 'no-id';
+                        
+                        if (stroke && stroke !== 'none') {
+                            allStrokeColors.add(stroke);
+                            elementDetails.push({
+                                type: 'stroke',
+                                element: tagName,
+                                color: stroke,
+                                width: strokeWidth,
+                                class: className,
+                                id: id
+                            });
+                        }
+                        
+                        analysisHTML += `${index + 1}. <strong>${tagName}</strong> `;
+                        analysisHTML += `<span class="color-box" style="background-color: ${stroke}"></span>`;
+                        analysisHTML += `<code>${stroke}</code><br>`;
+                        analysisHTML += `&nbsp;&nbsp;&nbsp;Class: ${className} | Width: ${strokeWidth || 'default'}<br><br>`;
+                    });
+                    analysisHTML += '</div>';
+                    
+                    // Analyze fill elements
+                    const fillElements = svg.querySelectorAll('[fill]');
+                    analysisHTML += `<div class="fill-info">
+                        <strong>🎨 Fill Elements (${fillElements.length}):</strong><br>`;
+                    
+                    fillElements.forEach((element, index) => {
+                        const fill = element.getAttribute('fill');
+                        const tagName = element.tagName;
+                        const className = element.getAttribute('class') || 'no-class';
+                        const id = element.getAttribute('id') || 'no-id';
+                        
+                        if (fill && fill !== 'none') {
+                            allFillColors.add(fill);
+                            elementDetails.push({
+                                type: 'fill',
+                                element: tagName,
+                                color: fill,
+                                class: className,
+                                id: id
+                            });
+                        }
+                        
+                        analysisHTML += `${index + 1}. <strong>${tagName}</strong> `;
+                        analysisHTML += `<span class="color-box" style="background-color: ${fill}"></span>`;
+                        analysisHTML += `<code>${fill}</code><br>`;
+                        analysisHTML += `&nbsp;&nbsp;&nbsp;Class: ${className}<br><br>`;
+                    });
+                    analysisHTML += '</div>';
+                });
+                
+                // Create summary
+                let summaryHTML = `<h3>📊 Color Summary for ${currentTheme.toUpperCase()} Theme</h3>`;
+                summaryHTML += `<p><strong>Total unique stroke colors:</strong> ${allStrokeColors.size}</p>`;
+                summaryHTML += `<p><strong>Total unique fill colors:</strong> ${allFillColors.size}</p>`;
+                
+                summaryHTML += '<h4>🎯 Stroke Colors:</h4><ul>';
+                allStrokeColors.forEach(color => {
+                    summaryHTML += `<li><span class="color-box" style="background-color: ${color}"></span> <code>${color}</code></li>`;
+                });
+                summaryHTML += '</ul>';
+                
+                summaryHTML += '<h4>🎨 Fill Colors:</h4><ul>';
+                allFillColors.forEach(color => {
+                    summaryHTML += `<li><span class="color-box" style="background-color: ${color}"></span> <code>${color}</code></li>`;
+                });
+                summaryHTML += '</ul>';
+                
+                // Add CSS variable analysis
+                summaryHTML += '<h4>🔧 CSS Variables Found:</h4>';
+                const styleSheets = document.styleSheets;
+                let cssVars = new Set();
+                for (let i = 0; i < styleSheets.length; i++) {
+                    try {
+                        const rules = styleSheets[i].cssRules || styleSheets[i].rules;
+                        for (let j = 0; j < rules.length; j++) {
+                            const rule = rules[j];
+                            if (rule.type === CSSRule.STYLE_RULE) {
+                                const style = rule.style;
+                                for (let k = 0; k < style.length; k++) {
+                                    const prop = style[k];
+                                    if (prop.startsWith('--')) {
+                                        cssVars.add(prop);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        // Cross-origin stylesheets might throw errors
+                    }
+                }
+                
+                if (cssVars.size > 0) {
+                    summaryHTML += '<ul>';
+                    cssVars.forEach(cssVar => {
+                        summaryHTML += `<li><code>${cssVar}</code></li>`;
+                    });
+                    summaryHTML += '</ul>';
+                } else {
+                    summaryHTML += '<p>No CSS variables found in accessible stylesheets.</p>';
+                }
+                
+                resultsDiv.innerHTML = analysisHTML;
+                summaryDiv.innerHTML = summaryHTML;
+                
+            }, 1000);
+        }
+        
+        function exportColors() {
+            const svgs = document.querySelectorAll('.mermaid svg');
+            const colorData = {
+                theme: currentTheme,
+                timestamp: new Date().toISOString(),
+                svgs: []
+            };
+            
+            svgs.forEach((svg, svgIndex) => {
+                const svgData = {
+                    index: svgIndex,
+                    strokeElements: [],
+                    fillElements: []
+                };
+                
+                // Collect stroke data
+                const strokeElements = svg.querySelectorAll('[stroke]');
+                strokeElements.forEach(element => {
+                    const stroke = element.getAttribute('stroke');
+                    if (stroke && stroke !== 'none') {
+                        svgData.strokeElements.push({
+                            tag: element.tagName,
+                            class: element.getAttribute('class'),
+                            id: element.getAttribute('id'),
+                            stroke: stroke,
+                            strokeWidth: element.getAttribute('stroke-width')
+                        });
+                    }
+                });
+                
+                // Collect fill data
+                const fillElements = svg.querySelectorAll('[fill]');
+                fillElements.forEach(element => {
+                    const fill = element.getAttribute('fill');
+                    if (fill && fill !== 'none') {
+                        svgData.fillElements.push({
+                            tag: element.tagName,
+                            class: element.getAttribute('class'),
+                            id: element.getAttribute('id'),
+                            fill: fill
+                        });
+                    }
+                });
+                
+                colorData.svgs.push(svgData);
+            });
+            
+            // Download as JSON
+            const dataStr = JSON.stringify(colorData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `mermaid-colors-${currentTheme}-${Date.now()}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Initialize diagrams on page load
+        window.addEventListener('load', () => {
+            mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+        });
+    </script>
+</body>
+</html>

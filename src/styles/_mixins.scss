@@ -1,0 +1,112 @@
+// =============================================================================
+// SASS Mixins
+// =============================================================================
+
+@use 'sass:map';
+@use 'variables' as *;
+
+@mixin theme-colors($theme) {
+  @each $name, $value in map.get($colors, $theme) {
+    --#{$name}: #{$value};
+  }
+}
+
+@mixin responsive($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (min-width: map.get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  }
+}
+
+@mixin mobile {
+  @media (max-width: 639px) {
+    @content;
+  }
+}
+
+@mixin dark-mode {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}
+
+@mixin focus-ring {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@mixin card-shadow {
+  box-shadow: map.get($shadows, md);
+  border: 1px solid var(--border);
+}
+
+@mixin transition($property: all, $duration: 0.2s, $easing: ease) {
+  transition: #{$property} #{$duration} #{$easing};
+}
+
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  font-weight: 500;
+  @include transition;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  
+  &:focus {
+    @include focus-ring;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@mixin button-variant($variant: primary) {
+  @if $variant == primary {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--primary) 90%, black);
+    }
+  } @else if $variant == secondary {
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+    
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--secondary) 90%, black);
+    }
+  } @else if $variant == outline {
+    background-color: transparent;
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    
+    &:hover:not(:disabled) {
+      background-color: var(--muted);
+    }
+  }
+}
+
+@mixin text-gradient($start-color, $end-color) {
+  background: linear-gradient(135deg, $start-color, $end-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@mixin glass-effect($opacity: 0.1) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@mixin dark-glass-effect($opacity: 0.1) {
+  background: rgba(0, 0, 0, $opacity);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}

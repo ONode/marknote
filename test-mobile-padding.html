@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Padding Test</title>
+    <link rel="stylesheet" href="dist/styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
+        }
+        
+        .test-container {
+            background: #f0f0f0;
+            border: 2px solid #333;
+            margin: 20px 0;
+            min-height: 100px;
+        }
+        
+        .test-content {
+            background: #e0e0e0;
+            padding: 20px;
+            margin: 10px;
+            border: 1px solid #666;
+        }
+        
+        .breakpoint-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="breakpoint-indicator" id="breakpoint"></div>
+    
+    <h1>Mobile Padding Test</h1>
+    <p>Resize your browser window to test mobile padding removal.</p>
+    
+    <!-- Test 1: Container class -->
+    <div class="container test-container">
+        <div class="test-content">
+            <h3>Container Class Test</h3>
+            <p>This should have no horizontal padding on mobile (&lt;640px) and padding on larger screens.</p>
+        </div>
+    </div>
+    
+    <!-- Test 2: PageLayout simulation -->
+    <div class="py-8">
+        <div class="mx-auto px-0 sm:px-4 max-w-lg test-container">
+            <div class="test-content">
+                <h3>PageLayout Simulation</h3>
+                <p>This simulates the PageLayout component with responsive padding.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Test 3: ContainerLayout simulation -->
+    <div class="max-w-lg px-0 sm:px-6 mx-auto test-container">
+        <div class="test-content">
+            <h3>ContainerLayout Simulation</h3>
+            <p>This simulates the ContainerLayout component with responsive padding.</p>
+        </div>
+    </div>
+    
+    <script>
+        function updateBreakpoint() {
+            const width = window.innerWidth;
+            const breakpoint = document.getElementById('breakpoint');
+            
+            if (width < 640) {
+                breakpoint.textContent = `Mobile: ${width}px`;
+                breakpoint.style.background = 'rgba(255,0,0,0.8)';
+            } else if (width < 768) {
+                breakpoint.textContent = `SM: ${width}px`;
+                breakpoint.style.background = 'rgba(0,255,0,0.8)';
+            } else if (width < 1024) {
+                breakpoint.textContent = `MD: ${width}px`;
+                breakpoint.style.background = 'rgba(0,0,255,0.8)';
+            } else {
+                breakpoint.textContent = `LG+: ${width}px`;
+                breakpoint.style.background = 'rgba(128,0,128,0.8)';
+            }
+        }
+        
+        updateBreakpoint();
+        window.addEventListener('resize', updateBreakpoint);
+    </script>
+</body>
+</html>

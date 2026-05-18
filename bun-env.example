@@ -1,0 +1,11 @@
+# Bun Development Environment
+# Copy this file to .env.local and adjust values as needed
+
+# Next.js Configuration
+NEXT_TELEMETRY_DISABLED=1
+
+# Development Configuration
+NODE_ENV=development
+
+# Bun Configuration
+BUN_INSTALL=1

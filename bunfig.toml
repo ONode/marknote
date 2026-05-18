@@ -1,0 +1,19 @@
+[build]
+entrypoints = ["./src/index.tsx"]
+outdir = "./dist"
+minify = true
+sourcemap = "external"
+target = "browser"
+format = "esm"
+
+[dev]
+port = 3000
+hostname = "localhost"
+entrypoints = ["./index.html"]
+
+[install]
+peer = true
+exact = false
+
+[resolve]
+alias = { "@" = "./src" }

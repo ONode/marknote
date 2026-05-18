@@ -1,0 +1,14 @@
+.katex-version {
+    display: none;
+}
+
+.katex-version::after {
+    content: "0.10.2 or earlier";
+}
+
+.katex {
+  text-indent: 0px;
+  text-rendering: auto;
+  font-family: KaTeX_Main, Times New Roman, serif;
+  font-size: 1.59em;
+}

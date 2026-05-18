@@ -1,0 +1,556 @@
+// =============================================================================
+// Main SASS File - Markdown Viewer Styles
+// =============================================================================
+
+// Import partials
+@import 'variables';
+@import 'mixins';
+@import 'theme';
+@import 'ui-components';
+
+// =============================================================================
+// Base Styles
+// =============================================================================
+
+:root {
+  @include theme-colors(light);
+  --radius: #{$radius};
+  
+  // Spacing variables
+  @each $name, $value in $spacing {
+    --spacing-#{$name}: #{$value};
+  }
+  
+  // Border radius variables
+  @each $name, $value in $border-radius {
+    --radius-#{$name}: #{$value};
+  }
+  
+  // Font variables
+  @each $name, $value in $font-families {
+    --font-#{$name}: #{$value};
+  }
+  
+  // Font size variables
+  @each $name, $value in $font-sizes {
+    --font-size-#{$name}: #{$value};
+  }
+  
+  // Line height variables
+  @each $name, $value in $line-heights {
+    --line-height-#{$name}: #{$value};
+  }
+}
+
+.dark {
+  @include theme-colors(dark);
+}
+
+* {
+  border-color: var(--border);
+  outline-color: var(--ring);
+  outline-width: 2px;
+  outline-offset: 2px;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  line-height: var(--line-height-normal);
+}
+
+// =============================================================================
+// Component Styles
+// =============================================================================
+
+// Mermaid Chart Styles
+.mermaid {
+  display: block !important;
+  text-align: center;
+  margin: var(--spacing-xl) 0;
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: map-get($shadows, sm);
+  min-height: 100px;
+  
+  svg {
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+  
+  .dark & {
+    background: var(--background);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Mermaid Wrapper Styles
+.mermaid-wrapper {
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  border-radius: var(--radius-lg);
+  @include transition;
+  width: 100%;
+  height: auto;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  box-shadow: map-get($shadows, sm);
+  
+  &:hover,
+  &.hover {
+    cursor: grab;
+    box-shadow: map-get($shadows, lg);
+  }
+  
+  &.panning {
+    cursor: grabbing;
+  }
+  
+  svg {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: block;
+  }
+  
+  .dark & {
+    background: var(--background);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    
+    &:hover,
+    &.hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+  }
+}
+
+// =============================================================================
+// Mathpix Markdown Styles
+// =============================================================================
+
+.mathpix-markdown {
+  font-family: var(--font-sans);
+  line-height: var(--line-height-normal);
+  color: var(--foreground);
+  
+  // Enhanced MathJax styling
+  .mjx-container {
+    font-family: var(--font-math);
+    font-feature-settings: 'kern' 1, 'liga' 1;
+  }
+  
+  .mjx-math {
+    font-family: var(--font-math);
+  }
+  
+  // Math styling
+  .math-inline {
+    display: inline-block;
+    margin: 0 2px;
+    vertical-align: middle;
+  }
+  
+  .math-display {
+    display: block;
+    text-align: center;
+    margin: var(--spacing-xl) 0;
+    padding: var(--spacing-lg);
+    background: var(--muted);
+    border-radius: var(--radius-lg);
+    border-left: 4px solid var(--primary);
+    overflow-x: auto;
+  }
+  
+  // Table styling
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: var(--spacing-xl) 0;
+    border: 1px solid var(--border);
+    
+    th,
+    td {
+      border: 1px solid var(--border);
+      padding: var(--spacing-sm) var(--spacing-md);
+      text-align: left;
+    }
+    
+    th {
+      background-color: var(--muted);
+      font-weight: 600;
+    }
+  }
+  
+  // Code styling
+  pre {
+    background-color: var(--muted);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    overflow-x: auto;
+    border: 1px solid var(--border);
+  }
+  
+  code {
+    background-color: var(--muted);
+    padding: 2px var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+  
+  // Blockquote styling
+  blockquote {
+    border-left: 4px solid var(--primary);
+    margin: var(--spacing-xl) 0;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    background-color: var(--muted);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    font-style: italic;
+  }
+  
+  // List styling
+  ul,
+  ol {
+    padding-left: var(--spacing-xxl);
+    margin: var(--spacing-lg) 0;
+    
+    li {
+      margin: var(--spacing-sm) 0;
+    }
+  }
+  
+  // Heading styling
+  h1, h2, h3, h4, h5, h6 {
+    margin: var(--spacing-xxl) 0 var(--spacing-lg) 0;
+    font-weight: 600;
+    line-height: var(--line-height-tight);
+    color: var(--foreground);
+  }
+  
+  h1 {
+    font-size: var(--font-size-4xl);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: var(--spacing-sm);
+  }
+  
+  h2 {
+    font-size: var(--font-size-3xl);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: var(--spacing-sm);
+  }
+  
+  h3 {
+    font-size: var(--font-size-2xl);
+  }
+  
+  // Paragraph styling
+  p {
+    margin: var(--spacing-lg) 0;
+    line-height: var(--line-height-normal);
+  }
+  
+  // Link styling
+  a {
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    @include transition(border-bottom-color);
+    
+    &:hover {
+      border-bottom-color: var(--primary);
+    }
+  }
+  
+  // Image styling
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    box-shadow: map-get($shadows, lg);
+  }
+  
+  // Horizontal rule styling
+  hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: var(--spacing-xxl) 0;
+  }
+  
+  // Emphasis styling
+  strong {
+    font-weight: 700;
+    color: var(--foreground);
+  }
+  
+  em {
+    font-style: italic;
+    color: var(--muted-foreground);
+  }
+  
+  // Strikethrough styling
+  strike {
+    text-decoration: line-through;
+    color: var(--muted-foreground);
+  }
+  
+  // Abbreviation styling
+  abbr {
+    border-bottom: 1px dotted var(--border);
+    cursor: help;
+  }
+  
+  // Definition list styling
+  dl {
+    margin: var(--spacing-xl) 0;
+    
+    dt {
+      font-weight: 600;
+      color: var(--foreground);
+      margin-top: var(--spacing-lg);
+    }
+    
+    dd {
+      margin-left: var(--spacing-xl);
+      margin-top: var(--spacing-sm);
+      color: var(--muted-foreground);
+    }
+  }
+  
+  // Footnote styling
+  .footnote {
+    font-size: 0.9em;
+    color: var(--muted-foreground);
+    border-top: 1px solid var(--border);
+    margin-top: var(--spacing-xxl);
+    padding-top: var(--spacing-lg);
+  }
+  
+  .footnote-ref {
+    font-size: 0.8em;
+    vertical-align: super;
+    color: var(--primary);
+  }
+  
+  // Chemistry SMILES styling
+  .smiles {
+    font-family: var(--font-mono);
+    background-color: var(--muted);
+    padding: 4px var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  
+  // Theorem and proof styling
+  .theorem {
+    background-color: var(--muted);
+    border-left: 4px solid var(--chart-1);
+    padding: var(--spacing-lg);
+    margin: var(--spacing-xl) 0;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    
+    .theorem-title {
+      font-weight: 600;
+      color: var(--chart-1);
+      margin-bottom: var(--spacing-md);
+      font-size: 1.1em;
+    }
+  }
+  
+  .proof {
+    background-color: var(--muted);
+    border-left: 4px solid var(--chart-2);
+    padding: var(--spacing-lg);
+    margin: var(--spacing-xl) 0;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    
+    .proof-title {
+      font-weight: 600;
+      color: var(--chart-2);
+      margin-bottom: var(--spacing-md);
+      font-size: 1.1em;
+    }
+  }
+  
+  // Abstract styling
+  .abstract {
+    background-color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-xl);
+    margin: var(--spacing-xxl) 0;
+    font-style: italic;
+    
+    .abstract-title {
+      font-weight: 600;
+      margin-bottom: var(--spacing-md);
+      color: var(--foreground);
+    }
+  }
+  
+  // Author list styling
+  .authors {
+    text-align: center;
+    margin: var(--spacing-xl) 0;
+    color: var(--muted-foreground);
+    font-style: italic;
+  }
+  
+  // Section styling
+  .section {
+    margin: var(--spacing-xxl) 0;
+    
+    .section-title {
+      font-weight: 600;
+      color: var(--foreground);
+      margin-bottom: var(--spacing-lg);
+    }
+  }
+}
+
+// =============================================================================
+// Responsive Design
+// =============================================================================
+
+@include responsive(md) {
+  .mathpix-markdown {
+    font-size: 0.95em;
+    
+    h1 {
+      font-size: 1.75em;
+    }
+    
+    h2 {
+      font-size: 1.4em;
+    }
+    
+    pre {
+      padding: var(--spacing-md);
+    }
+    
+    blockquote {
+      padding: var(--spacing-md) var(--spacing-lg);
+    }
+  }
+}
+
+// =============================================================================
+// Utility Classes
+// =============================================================================
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.font-bold { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+.font-normal { font-weight: 400; }
+
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--secondary); }
+.text-muted { color: var(--muted-foreground); }
+
+.bg-primary { background-color: var(--primary); }
+.bg-secondary { background-color: var(--secondary); }
+.bg-muted { background-color: var(--muted); }
+
+.rounded { border-radius: var(--radius); }
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+
+.shadow-sm { box-shadow: map-get($shadows, sm); }
+.shadow-md { box-shadow: map-get($shadows, md); }
+.shadow-lg { box-shadow: map-get($shadows, lg); }
+
+// =============================================================================
+// Enhanced UI Components
+// =============================================================================
+
+// Button styles using our mixins
+.btn {
+  @include button-base;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  
+  &.btn-primary {
+    @include button-variant(primary);
+  }
+  
+  &.btn-secondary {
+    @include button-variant(secondary);
+  }
+  
+  &.btn-outline {
+    @include button-variant(outline);
+  }
+  
+  &.btn-lg {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-base);
+  }
+  
+  &.btn-sm {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+}
+
+// Card component
+.card {
+  @include card-shadow;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  background: var(--card);
+  
+  .card-header {
+    margin-bottom: var(--spacing-md);
+    
+    .card-title {
+      font-size: var(--font-size-xl);
+      font-weight: 600;
+      color: var(--card-foreground);
+      margin: 0;
+    }
+    
+    .card-description {
+      color: var(--muted-foreground);
+      margin-top: var(--spacing-xs);
+    }
+  }
+  
+  .card-content {
+    color: var(--card-foreground);
+  }
+  
+  .card-footer {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border);
+  }
+}
+
+// Glass morphism effects
+.glass {
+  @include glass-effect;
+  
+  .dark & {
+    @include dark-glass-effect;
+  }
+}
+
+// Gradient text effects
+.text-gradient-primary {
+  @include text-gradient(var(--primary), var(--chart-1));
+}
+
+.text-gradient-secondary {
+  @include text-gradient(var(--secondary), var(--chart-2));
+}
