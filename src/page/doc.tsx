@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useFileManager } from '@/hooks/use-file-manager';
 import { Button } from '@/components/ui/button';
 import { Layout } from '@/components/layout';
@@ -8,6 +8,14 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
 import {
   Dialog,
   DialogContent,
@@ -36,7 +44,6 @@ import {
 import {
   FileText,
   Plus,
-  Search,
   Download,
   Upload,
   Trash2,
@@ -99,6 +106,7 @@ export default function DocPage({ onNavigate }: DocPageProps) {
     maxFiles: 100,
   });
 
+  const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showRenameDialog, setShowRenameDialog] = useState(false);
@@ -112,14 +120,37 @@ export default function DocPage({ onNavigate }: DocPageProps) {
   const [renameValue, setRenameValue] = useState('');
   const [importData, setImportData] = useState('');
   const [selectedFileForAction, setSelectedFileForAction] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const filteredFiles = searchQuery ? searchFiles(searchQuery) : files;
   const storageStatus = checkStorage();
+  const searchResults = searchQuery.trim() ? searchFiles(searchQuery) : files;
 
-  const openDocument = (file: FileMetadata) => {
+  const openDocument = useCallback((file: FileMetadata) => {
     selectFile(file.id);
     const content = file.isCompressed ? getDecompressedContent(file) : file.content;
     onNavigate?.('home', content, file);
+  }, [selectFile, onNavigate]);
+
+  const openSearch = useCallback(() => {
+    setSearchQuery('');
+    setSearchOpen(true);
+  }, []);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        openSearch();
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [openSearch]);
+
+  const handleSearchSelect = (file: FileMetadata) => {
+    setSearchOpen(false);
+    setSearchQuery('');
+    openDocument(file);
   };
 
   const handleCreateFile = async () => {
@@ -240,6 +271,14 @@ export default function DocPage({ onNavigate }: DocPageProps) {
     }
   };
 
+  const handleFileImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      handleFileDrop(file);
+    }
+    event.target.value = '';
+  };
+
   return (
     <Layout>
       <div className="flex h-screen flex-col overflow-hidden">
@@ -256,27 +295,35 @@ export default function DocPage({ onNavigate }: DocPageProps) {
             <ArrowLeft className="h-3.5 w-3.5" />
           </Button>
 
-          <div className="min-w-0 shrink-0">
+          <div className="min-w-0 flex-1">
             <h1 className="text-sm font-semibold leading-none">Archive</h1>
             <p className="text-[10px] text-muted-foreground leading-tight">
               {stats.totalFiles} doc{stats.totalFiles !== 1 ? 's' : ''} · {formatFileSize(stats.totalSize)}
+              <span className="hidden sm:inline"> · ⌘K search</span>
             </p>
-          </div>
-
-          <div className="relative min-w-0 flex-1">
-            <Search className="pointer-events-none absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search…"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-7 pl-7 text-xs"
-            />
           </div>
 
           <Button size="sm" className="h-7 shrink-0 px-2 text-xs" onClick={() => setShowCreateDialog(true)}>
             <Plus className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">New</span>
           </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-7 shrink-0 px-2 text-xs"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Upload className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Import</span>
+          </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".md,.markdown,.txt"
+            onChange={handleFileImport}
+            className="hidden"
+          />
 
           <ThemeToggle />
 
@@ -293,7 +340,7 @@ export default function DocPage({ onNavigate }: DocPageProps) {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setShowImportDialog(true)}>
                 <Upload className="h-3.5 w-3.5" />
-                Import
+                Import backup
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setShowSettingsDialog(true)}>
                 <Settings className="h-3.5 w-3.5" />
@@ -327,20 +374,18 @@ export default function DocPage({ onNavigate }: DocPageProps) {
             <div className="flex items-center justify-center py-8">
               <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
             </div>
-          ) : filteredFiles.length === 0 ? (
+          ) : files.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-2 py-10 text-center text-muted-foreground">
               <FileText className="h-8 w-8 opacity-40" />
-              <p className="text-xs">{searchQuery ? 'No matches' : 'No documents yet'}</p>
-              {!searchQuery && (
-                <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setShowCreateDialog(true)}>
-                  <Plus className="h-3 w-3" />
-                  Create
-                </Button>
-              )}
+              <p className="text-xs">No documents yet</p>
+              <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setShowCreateDialog(true)}>
+                <Plus className="h-3 w-3" />
+                Create
+              </Button>
             </div>
           ) : (
             <ul className="divide-y">
-              {filteredFiles.map((file) => (
+              {files.map((file) => (
                 <li key={file.id}>
                   <div
                     role="button"
@@ -427,6 +472,41 @@ export default function DocPage({ onNavigate }: DocPageProps) {
           )}
         </ScrollArea>
       </DragDropZone>
+
+      <CommandDialog
+        open={searchOpen}
+        onOpenChange={(open) => {
+          setSearchOpen(open);
+          if (!open) setSearchQuery('');
+        }}
+        shouldFilter={false}
+        title="Search documents"
+        description="Search by name, content, or tags"
+      >
+        <CommandInput
+          placeholder="Search documents…"
+          value={searchQuery}
+          onValueChange={setSearchQuery}
+        />
+        <CommandList>
+          <CommandEmpty>No documents found.</CommandEmpty>
+          <CommandGroup heading="Documents">
+            {searchResults.map((file) => (
+              <CommandItem
+                key={file.id}
+                value={`${file.name} ${file.tags?.join(' ') ?? ''}`}
+                onSelect={() => handleSearchSelect(file)}
+              >
+                <FileText className="h-4 w-4" />
+                <span className="flex-1 truncate">{file.name}</span>
+                <span className="text-xs text-muted-foreground">
+                  {formatRelativeDate(file.updatedAt)}
+                </span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </CommandList>
+      </CommandDialog>
 
       {/* Create */}
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
