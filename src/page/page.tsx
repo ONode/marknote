@@ -43,6 +43,7 @@ import {
   DialogClose,
 } from "../components/ui/dialog";
 import { SAMPLE_MARKDOWN } from "@/lib/sample";
+import logoUrl from "@/styles/svg/logo.svg";
 
 function HomeContent({
   viewMode,
@@ -430,7 +431,7 @@ export default function HomePage({ onNavigate, contentToLoad, fileToLoad, onCont
             className="flex items-center gap-2"
           >
             <img
-              src="/public/logo.svg"
+              src={logoUrl}
               alt=""
               className={cn(
                 "h-5 w-5 transition-opacity duration-200",

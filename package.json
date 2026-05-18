@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "./dev.sh",
     "dev:css": "chokidar \"src/styles/**/*.scss\" -c \"bun run build:css\" --initial",
-    "build": "bun run build:css && bun build ./src/index.tsx --outdir ./dist --minify",
+    "build": "bun run build:css && bun build ./src/index.tsx --outdir ./dist --minify && bash scripts/build-html.sh",
     "build:css": "bunx sass src/styles/main.scss dist/styles.css --style=compressed",
     "build:full": "bun run build:css && bun run build",
     "preview": "bun --hot dist/index.html",
