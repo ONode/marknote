@@ -423,24 +423,22 @@ export default function HomePage({ onNavigate, contentToLoad, fileToLoad, onCont
         )}
       >
         <div className="mx-auto container flex h-11 items-center px-4">
-          <div className="flex items-center gap-2 mr-4">
-            <FileText
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onNavigate?.('doc')}
+            className="flex items-center gap-2"
+          >
+            <img
+              src="/public/logo.svg"
+              alt=""
               className={cn(
-                "h-6 w-6 transition-colors duration-200",
-                isDragOver && "text-primary",
+                "h-5 w-5 transition-opacity duration-200",
+                isDragOver && "opacity-70",
               )}
             />
-          </div>
-
-          <div className="flex gap-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onNavigate?.('doc')}
-            >
-              View Documents
-            </Button>
-          </div>
+            Library
+          </Button>
 
           <div className="ml-auto flex gap-2">
             <ThemeToggle />
